@@ -1,0 +1,24 @@
+{
+  "config": {
+    "path": "configs/v2.toml",
+    "sha256": "3e67be8d66766cf100f12d4966ce7878a7ef68417112847c53deb2b03a07336b"
+  },
+  "release_tag": "v2.0",
+  "representative": {
+    "checkpoint": {
+      "path": "runs_v2/comm/seed_0009/final.pt",
+      "sha256": "1da285c5caf26c049e1bd9664d8117de144fbe646b8ad512804e7a3f8cdf69df"
+    },
+    "condition": "comm",
+    "evaluation": {
+      "path": "runs_v2/comm/seed_0009/eval.jsonl",
+      "sha256": "9a53c183ef024c14aa3177f7c84547bafe80835cf50b0953d313bc622c52b2c8"
+    },
+    "seed": 9
+  },
+  "results_table": {
+    "path": "results/v2/per_run.csv",
+    "sha256": "b084e6557e85e611c179ec309ddef8026a7f8d58c1dc8eb106ea5046c351b1ce"
+  },
+  "schema_version": "v2-release-input-index-1"
+}

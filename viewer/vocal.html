@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vocal Channel Replays</title>
+  <link rel="stylesheet" href="viewer.css">
+</head>
+<body>
+  <header>
+    <h1>Emergent Communication: the Vocal Channel</h1>
+    <p class="sub">Exploratory arm: the agents emit a continuous pitch instead of a symbol, heard through noise. Play the same held-out episode with the intact voice, with a voice from a different episode (shuffled), or with no communication. Turn on sound to hear the runner's ear. <a href="index.html">Discrete-symbol replays</a></p>
+  </header>
+  <main>
+    <section class="controls" aria-label="Replay controls">
+      <label>Episode <select id="episode"></select></label>
+      <div class="variants" id="variants" role="tablist"></div>
+    </section>
+    <section class="stage">
+      <canvas id="grid" width="480" height="480" aria-label="Grid world"></canvas>
+      <aside class="panel">
+        <dl>
+          <dt>Step</dt><dd id="step"></dd>
+          <dt>Target (scout's cue)</dt><dd id="target"></dd>
+          <dt>Scout says</dt><dd id="said"></dd>
+          <dt>Runner hears</dt><dd id="heard"></dd>
+          <dt>Runner carrying</dt><dd id="carrying"></dd>
+          <dt>Outcome</dt><dd id="outcome"></dd>
+        </dl>
+        <div class="legend">
+          <span><i class="sw scout"></i>Scout</span><span><i class="sw runner"></i>Runner</span>
+          <span><i class="sw depot"></i>Depot</span><span><i class="sw view"></i>Runner's view</span>
+        </div>
+      </aside>
+    </section>
+    <section class="tape" aria-label="Message tape">
+      <div class="tape-row"><span class="tape-label">Scout says</span><div id="tape-said" class="cells"></div></div>
+      <div class="tape-row"><span class="tape-label">Runner hears</span><div id="tape-heard" class="cells"></div></div>
+    </section>
+    <section class="transport">
+      <button id="prev" aria-label="Previous step">&#9664;</button>
+      <button id="play">Play</button>
+      <button id="next" aria-label="Next step">&#9654;</button>
+      <input id="scrub" type="range" min="0" value="0" aria-label="Step">
+      <label>Speed <select id="speed"><option value="600">slow</option><option value="300" selected>normal</option><option value="120">fast</option></select></label>
+      <button id="sound" aria-pressed="false" title="Plays what the runner hears: one note per symbol (discrete) or the heard pitch (vocal)">Sound off</button>
+    </section>
+    <p id="missing" class="missing" hidden>No replay data found. Run <code>uv run python -m emcomm.replays --runs runs_vocal --results results/vocal --out viewer/data/replays_vocal.js</code>.</p>
+  </main>
+  <script src="data/replays_vocal.js"></script>
+  <script src="viewer.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "repository": "https://github.com/cvpr-org/author-kit",
+  "branch": "tweaks2026",
+  "commit": "caa4202bcda91949a3dedb803a0d79f8008d4d70",
+  "files": {
+    "cvpr.sty": "2602473285d1a7df2a445ac89b76e1afa0acab78e056f0369d19770245190153",
+    "README.md": "a18d3c0fa6ef9a82c37719d960b239e81b5208b419aa2fd3964de7dd785830e5"
+  }
+}

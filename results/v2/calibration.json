@@ -1,0 +1,39 @@
+{
+  "mean_layout_acceptance": 0.5808333333333333,
+  "min_layout_acceptance": 0.41,
+  "scripted": {
+    "held_out": {
+      "scripted_comm": 1.0,
+      "scripted_oracle": 1.0,
+      "scripted_no_comm": 0.295,
+      "scripted_random_msg": 0.295,
+      "scripted_color_only": 0.49,
+      "scripted_shape_only": 0.53
+    },
+    "unseen": {
+      "scripted_comm": 1.0,
+      "scripted_oracle": 1.0,
+      "scripted_no_comm": 0.225,
+      "scripted_random_msg": 0.215,
+      "scripted_color_only": 0.49,
+      "scripted_shape_only": 0.465
+    },
+    "train": {
+      "scripted_comm": 1.0,
+      "scripted_oracle": 1.0,
+      "scripted_no_comm": 0.26,
+      "scripted_random_msg": 0.275,
+      "scripted_color_only": 0.525,
+      "scripted_shape_only": 0.53
+    }
+  },
+  "checks": {
+    "min_layout_acceptance >= 0.20": true,
+    "scripted_comm >= 0.98 on held_out and unseen": true,
+    "scripted_oracle >= 0.98 on held_out and unseen": true,
+    "0.18 <= scripted_no_comm <= 0.32": true,
+    "0.40 <= scripted_color_only <= 0.60": true,
+    "0.40 <= scripted_shape_only <= 0.60": true,
+    "headroom (comm - no_comm) >= 0.50": true
+  }
+}

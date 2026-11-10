@@ -1,0 +1,1098 @@
+{
+  "schema_version": 1,
+  "kind": "source_only_mathematical_reference",
+  "learned_data_used": false,
+  "provenance": {
+    "generator": "scripts/build_v2_support_reference.py",
+    "audited_source_sha256": {
+      "configs/v2.toml": "3e67be8d66766cf100f12d4966ce7878a7ef68417112847c53deb2b03a07336b",
+      "src/emcomm/combos.py": "a97dab94b5671b9920374f19f949826853aa69a2d0e26f23e36c569c85423274",
+      "docs/PREREGISTRATION_V2.md": "a46f0cdc01a539270d133dc1ffac9ca5ace5a9b3cd11172e3fc171713438cc8f"
+    },
+    "method": "Independent exhaustive enumeration of the frozen unseen target prior: a uniform held-out target and a uniform 2x2 square containing it."
+  },
+  "n_values": 5,
+  "combo_seed": 20261003,
+  "held_out_combinations": [
+    "red sphere",
+    "yellow ring",
+    "green cylinder",
+    "blue cube",
+    "purple cone"
+  ],
+  "unseen_prior": {
+    "targets": 5,
+    "squares_per_target": 16,
+    "equiprobable_target_square_states": 80,
+    "held_out_candidate_count_distribution": {
+      "1": 60,
+      "2": 20
+    }
+  },
+  "support_aware_no_message_identification_rate": 0.875,
+  "one_property_plus_matching_identification_rate": 1.0,
+  "fixed_h4_reference": 0.5,
+  "conclusion": "The fixed 50% H4 reference is not an unseen one-property ceiling. Before navigation, support alone identifies the target in 60 states and leaves two candidates in 20 states, for 87.5% expected identification with uniform tie-breaking.",
+  "states": [
+    {
+      "target": "red sphere",
+      "square": [
+        "red cube",
+        "red sphere",
+        "yellow cube",
+        "yellow sphere"
+      ],
+      "held_out_candidates": [
+        "red sphere"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "red sphere",
+      "square": [
+        "red sphere",
+        "red cone",
+        "yellow sphere",
+        "yellow cone"
+      ],
+      "held_out_candidates": [
+        "red sphere"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "red sphere",
+      "square": [
+        "red sphere",
+        "red cylinder",
+        "yellow sphere",
+        "yellow cylinder"
+      ],
+      "held_out_candidates": [
+        "red sphere"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "red sphere",
+      "square": [
+        "red sphere",
+        "red ring",
+        "yellow sphere",
+        "yellow ring"
+      ],
+      "held_out_candidates": [
+        "red sphere",
+        "yellow ring"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "red sphere",
+      "square": [
+        "red cube",
+        "red sphere",
+        "green cube",
+        "green sphere"
+      ],
+      "held_out_candidates": [
+        "red sphere"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "red sphere",
+      "square": [
+        "red sphere",
+        "red cone",
+        "green sphere",
+        "green cone"
+      ],
+      "held_out_candidates": [
+        "red sphere"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "red sphere",
+      "square": [
+        "red sphere",
+        "red cylinder",
+        "green sphere",
+        "green cylinder"
+      ],
+      "held_out_candidates": [
+        "red sphere",
+        "green cylinder"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "red sphere",
+      "square": [
+        "red sphere",
+        "red ring",
+        "green sphere",
+        "green ring"
+      ],
+      "held_out_candidates": [
+        "red sphere"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "red sphere",
+      "square": [
+        "red cube",
+        "red sphere",
+        "blue cube",
+        "blue sphere"
+      ],
+      "held_out_candidates": [
+        "red sphere",
+        "blue cube"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "red sphere",
+      "square": [
+        "red sphere",
+        "red cone",
+        "blue sphere",
+        "blue cone"
+      ],
+      "held_out_candidates": [
+        "red sphere"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "red sphere",
+      "square": [
+        "red sphere",
+        "red cylinder",
+        "blue sphere",
+        "blue cylinder"
+      ],
+      "held_out_candidates": [
+        "red sphere"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "red sphere",
+      "square": [
+        "red sphere",
+        "red ring",
+        "blue sphere",
+        "blue ring"
+      ],
+      "held_out_candidates": [
+        "red sphere"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "red sphere",
+      "square": [
+        "red cube",
+        "red sphere",
+        "purple cube",
+        "purple sphere"
+      ],
+      "held_out_candidates": [
+        "red sphere"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "red sphere",
+      "square": [
+        "red sphere",
+        "red cone",
+        "purple sphere",
+        "purple cone"
+      ],
+      "held_out_candidates": [
+        "red sphere",
+        "purple cone"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "red sphere",
+      "square": [
+        "red sphere",
+        "red cylinder",
+        "purple sphere",
+        "purple cylinder"
+      ],
+      "held_out_candidates": [
+        "red sphere"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "red sphere",
+      "square": [
+        "red sphere",
+        "red ring",
+        "purple sphere",
+        "purple ring"
+      ],
+      "held_out_candidates": [
+        "red sphere"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "yellow ring",
+      "square": [
+        "red cube",
+        "red ring",
+        "yellow cube",
+        "yellow ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "yellow ring",
+      "square": [
+        "red sphere",
+        "red ring",
+        "yellow sphere",
+        "yellow ring"
+      ],
+      "held_out_candidates": [
+        "red sphere",
+        "yellow ring"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "yellow ring",
+      "square": [
+        "red cone",
+        "red ring",
+        "yellow cone",
+        "yellow ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "yellow ring",
+      "square": [
+        "red cylinder",
+        "red ring",
+        "yellow cylinder",
+        "yellow ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "yellow ring",
+      "square": [
+        "yellow cube",
+        "yellow ring",
+        "green cube",
+        "green ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "yellow ring",
+      "square": [
+        "yellow sphere",
+        "yellow ring",
+        "green sphere",
+        "green ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "yellow ring",
+      "square": [
+        "yellow cone",
+        "yellow ring",
+        "green cone",
+        "green ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "yellow ring",
+      "square": [
+        "yellow cylinder",
+        "yellow ring",
+        "green cylinder",
+        "green ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring",
+        "green cylinder"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "yellow ring",
+      "square": [
+        "yellow cube",
+        "yellow ring",
+        "blue cube",
+        "blue ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring",
+        "blue cube"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "yellow ring",
+      "square": [
+        "yellow sphere",
+        "yellow ring",
+        "blue sphere",
+        "blue ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "yellow ring",
+      "square": [
+        "yellow cone",
+        "yellow ring",
+        "blue cone",
+        "blue ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "yellow ring",
+      "square": [
+        "yellow cylinder",
+        "yellow ring",
+        "blue cylinder",
+        "blue ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "yellow ring",
+      "square": [
+        "yellow cube",
+        "yellow ring",
+        "purple cube",
+        "purple ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "yellow ring",
+      "square": [
+        "yellow sphere",
+        "yellow ring",
+        "purple sphere",
+        "purple ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "yellow ring",
+      "square": [
+        "yellow cone",
+        "yellow ring",
+        "purple cone",
+        "purple ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring",
+        "purple cone"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "yellow ring",
+      "square": [
+        "yellow cylinder",
+        "yellow ring",
+        "purple cylinder",
+        "purple ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "green cylinder",
+      "square": [
+        "red cube",
+        "red cylinder",
+        "green cube",
+        "green cylinder"
+      ],
+      "held_out_candidates": [
+        "green cylinder"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "green cylinder",
+      "square": [
+        "red sphere",
+        "red cylinder",
+        "green sphere",
+        "green cylinder"
+      ],
+      "held_out_candidates": [
+        "red sphere",
+        "green cylinder"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "green cylinder",
+      "square": [
+        "red cone",
+        "red cylinder",
+        "green cone",
+        "green cylinder"
+      ],
+      "held_out_candidates": [
+        "green cylinder"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "green cylinder",
+      "square": [
+        "red cylinder",
+        "red ring",
+        "green cylinder",
+        "green ring"
+      ],
+      "held_out_candidates": [
+        "green cylinder"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "green cylinder",
+      "square": [
+        "yellow cube",
+        "yellow cylinder",
+        "green cube",
+        "green cylinder"
+      ],
+      "held_out_candidates": [
+        "green cylinder"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "green cylinder",
+      "square": [
+        "yellow sphere",
+        "yellow cylinder",
+        "green sphere",
+        "green cylinder"
+      ],
+      "held_out_candidates": [
+        "green cylinder"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "green cylinder",
+      "square": [
+        "yellow cone",
+        "yellow cylinder",
+        "green cone",
+        "green cylinder"
+      ],
+      "held_out_candidates": [
+        "green cylinder"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "green cylinder",
+      "square": [
+        "yellow cylinder",
+        "yellow ring",
+        "green cylinder",
+        "green ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring",
+        "green cylinder"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "green cylinder",
+      "square": [
+        "green cube",
+        "green cylinder",
+        "blue cube",
+        "blue cylinder"
+      ],
+      "held_out_candidates": [
+        "green cylinder",
+        "blue cube"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "green cylinder",
+      "square": [
+        "green sphere",
+        "green cylinder",
+        "blue sphere",
+        "blue cylinder"
+      ],
+      "held_out_candidates": [
+        "green cylinder"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "green cylinder",
+      "square": [
+        "green cone",
+        "green cylinder",
+        "blue cone",
+        "blue cylinder"
+      ],
+      "held_out_candidates": [
+        "green cylinder"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "green cylinder",
+      "square": [
+        "green cylinder",
+        "green ring",
+        "blue cylinder",
+        "blue ring"
+      ],
+      "held_out_candidates": [
+        "green cylinder"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "green cylinder",
+      "square": [
+        "green cube",
+        "green cylinder",
+        "purple cube",
+        "purple cylinder"
+      ],
+      "held_out_candidates": [
+        "green cylinder"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "green cylinder",
+      "square": [
+        "green sphere",
+        "green cylinder",
+        "purple sphere",
+        "purple cylinder"
+      ],
+      "held_out_candidates": [
+        "green cylinder"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "green cylinder",
+      "square": [
+        "green cone",
+        "green cylinder",
+        "purple cone",
+        "purple cylinder"
+      ],
+      "held_out_candidates": [
+        "green cylinder",
+        "purple cone"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "green cylinder",
+      "square": [
+        "green cylinder",
+        "green ring",
+        "purple cylinder",
+        "purple ring"
+      ],
+      "held_out_candidates": [
+        "green cylinder"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "blue cube",
+      "square": [
+        "red cube",
+        "red sphere",
+        "blue cube",
+        "blue sphere"
+      ],
+      "held_out_candidates": [
+        "red sphere",
+        "blue cube"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "blue cube",
+      "square": [
+        "red cube",
+        "red cone",
+        "blue cube",
+        "blue cone"
+      ],
+      "held_out_candidates": [
+        "blue cube"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "blue cube",
+      "square": [
+        "red cube",
+        "red cylinder",
+        "blue cube",
+        "blue cylinder"
+      ],
+      "held_out_candidates": [
+        "blue cube"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "blue cube",
+      "square": [
+        "red cube",
+        "red ring",
+        "blue cube",
+        "blue ring"
+      ],
+      "held_out_candidates": [
+        "blue cube"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "blue cube",
+      "square": [
+        "yellow cube",
+        "yellow sphere",
+        "blue cube",
+        "blue sphere"
+      ],
+      "held_out_candidates": [
+        "blue cube"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "blue cube",
+      "square": [
+        "yellow cube",
+        "yellow cone",
+        "blue cube",
+        "blue cone"
+      ],
+      "held_out_candidates": [
+        "blue cube"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "blue cube",
+      "square": [
+        "yellow cube",
+        "yellow cylinder",
+        "blue cube",
+        "blue cylinder"
+      ],
+      "held_out_candidates": [
+        "blue cube"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "blue cube",
+      "square": [
+        "yellow cube",
+        "yellow ring",
+        "blue cube",
+        "blue ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring",
+        "blue cube"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "blue cube",
+      "square": [
+        "green cube",
+        "green sphere",
+        "blue cube",
+        "blue sphere"
+      ],
+      "held_out_candidates": [
+        "blue cube"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "blue cube",
+      "square": [
+        "green cube",
+        "green cone",
+        "blue cube",
+        "blue cone"
+      ],
+      "held_out_candidates": [
+        "blue cube"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "blue cube",
+      "square": [
+        "green cube",
+        "green cylinder",
+        "blue cube",
+        "blue cylinder"
+      ],
+      "held_out_candidates": [
+        "green cylinder",
+        "blue cube"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "blue cube",
+      "square": [
+        "green cube",
+        "green ring",
+        "blue cube",
+        "blue ring"
+      ],
+      "held_out_candidates": [
+        "blue cube"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "blue cube",
+      "square": [
+        "blue cube",
+        "blue sphere",
+        "purple cube",
+        "purple sphere"
+      ],
+      "held_out_candidates": [
+        "blue cube"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "blue cube",
+      "square": [
+        "blue cube",
+        "blue cone",
+        "purple cube",
+        "purple cone"
+      ],
+      "held_out_candidates": [
+        "blue cube",
+        "purple cone"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "blue cube",
+      "square": [
+        "blue cube",
+        "blue cylinder",
+        "purple cube",
+        "purple cylinder"
+      ],
+      "held_out_candidates": [
+        "blue cube"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "blue cube",
+      "square": [
+        "blue cube",
+        "blue ring",
+        "purple cube",
+        "purple ring"
+      ],
+      "held_out_candidates": [
+        "blue cube"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "purple cone",
+      "square": [
+        "red cube",
+        "red cone",
+        "purple cube",
+        "purple cone"
+      ],
+      "held_out_candidates": [
+        "purple cone"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "purple cone",
+      "square": [
+        "red sphere",
+        "red cone",
+        "purple sphere",
+        "purple cone"
+      ],
+      "held_out_candidates": [
+        "red sphere",
+        "purple cone"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "purple cone",
+      "square": [
+        "red cone",
+        "red cylinder",
+        "purple cone",
+        "purple cylinder"
+      ],
+      "held_out_candidates": [
+        "purple cone"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "purple cone",
+      "square": [
+        "red cone",
+        "red ring",
+        "purple cone",
+        "purple ring"
+      ],
+      "held_out_candidates": [
+        "purple cone"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "purple cone",
+      "square": [
+        "yellow cube",
+        "yellow cone",
+        "purple cube",
+        "purple cone"
+      ],
+      "held_out_candidates": [
+        "purple cone"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "purple cone",
+      "square": [
+        "yellow sphere",
+        "yellow cone",
+        "purple sphere",
+        "purple cone"
+      ],
+      "held_out_candidates": [
+        "purple cone"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "purple cone",
+      "square": [
+        "yellow cone",
+        "yellow cylinder",
+        "purple cone",
+        "purple cylinder"
+      ],
+      "held_out_candidates": [
+        "purple cone"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "purple cone",
+      "square": [
+        "yellow cone",
+        "yellow ring",
+        "purple cone",
+        "purple ring"
+      ],
+      "held_out_candidates": [
+        "yellow ring",
+        "purple cone"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "purple cone",
+      "square": [
+        "green cube",
+        "green cone",
+        "purple cube",
+        "purple cone"
+      ],
+      "held_out_candidates": [
+        "purple cone"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "purple cone",
+      "square": [
+        "green sphere",
+        "green cone",
+        "purple sphere",
+        "purple cone"
+      ],
+      "held_out_candidates": [
+        "purple cone"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "purple cone",
+      "square": [
+        "green cone",
+        "green cylinder",
+        "purple cone",
+        "purple cylinder"
+      ],
+      "held_out_candidates": [
+        "green cylinder",
+        "purple cone"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "purple cone",
+      "square": [
+        "green cone",
+        "green ring",
+        "purple cone",
+        "purple ring"
+      ],
+      "held_out_candidates": [
+        "purple cone"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "purple cone",
+      "square": [
+        "blue cube",
+        "blue cone",
+        "purple cube",
+        "purple cone"
+      ],
+      "held_out_candidates": [
+        "blue cube",
+        "purple cone"
+      ],
+      "candidate_count": 2
+    },
+    {
+      "target": "purple cone",
+      "square": [
+        "blue sphere",
+        "blue cone",
+        "purple sphere",
+        "purple cone"
+      ],
+      "held_out_candidates": [
+        "purple cone"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "purple cone",
+      "square": [
+        "blue cone",
+        "blue cylinder",
+        "purple cone",
+        "purple cylinder"
+      ],
+      "held_out_candidates": [
+        "purple cone"
+      ],
+      "candidate_count": 1
+    },
+    {
+      "target": "purple cone",
+      "square": [
+        "blue cone",
+        "blue ring",
+        "purple cone",
+        "purple ring"
+      ],
+      "held_out_candidates": [
+        "purple cone"
+      ],
+      "candidate_count": 1
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "n_seeds": 20,
+  "exploratory_post_hoc": true,
+  "biased": {
+    "success": {
+      "mean": 0.8755000000000001,
+      "lo": 0.8630000000000001,
+      "hi": 0.8862499999999999
+    }
+  },
+  "unbiased": {
+    "success": {
+      "mean": 0.22675,
+      "lo": 0.21675,
+      "hi": 0.23625000000000002
+    },
+    "intact_minus_permuted": {
+      "mean": 0.006749999999999999,
+      "lo": -0.0024999999999999996,
+      "hi": 0.015500000000000003
+    }
+  },
+  "biased_minus_unbiased": {
+    "mean": 0.64875,
+    "lo": 0.633,
+    "hi": 0.6637500000000001
+  },
+  "provenance": {
+    "launch": {
+      "declared_at": "2026-11-09T18:10:13.253817+00:00",
+      "source_head": "a39080da3550b8bfc932267580932b614ae72353",
+      "command": [
+        "/usr/bin/caffeinate",
+        "-i",
+        "/Users/christian/.local/bin/uv",
+        "run",
+        "python",
+        "-m",
+        "emcomm.sweep",
+        "--config",
+        "configs/ablation_unbiased.toml",
+        "--root",
+        "runs/ablation_unbiased",
+        "--seeds",
+        "0-19",
+        "--conditions",
+        "comm",
+        "--workers",
+        "6"
+      ],
+      "exploratory_post_hoc": true,
+      "prior_benchmark_results_seen": true,
+      "files": {
+        "configs/ablation_unbiased.toml": "02490611a35c2810dc958641d1922c062408935f8522c1b9c1bcb5a6a1d2635b",
+        "configs/base.toml": "fce5e4b264b4b9f009d49593ebb1a349c86bf7d0d5a5ac37b1d141dc0f940561",
+        "docs/SUPPLEMENTARY_ABLATION.md": "a31b72263e3bdfdeb9907948697cf444d7316bce56dd88cd25ab50f982ca7977",
+        "src/emcomm/__init__.py": "035fa7bc4ebf5fa7576394be24a1b6a6500459964ae6f075b34f66e7dabe1f9a",
+        "src/emcomm/analysis.py": "cdb2d7d5cefe1e6dc23cdcf2d11f0758407bc1b38e856f15b4074df3196494d0",
+        "src/emcomm/analysis_v2.py": "059d75613fe0ad1eb6c2037bfd831eb649c90f0a1505e8a3a245b26e43b8f9e0",
+        "src/emcomm/benchmark.py": "e70a1836a26e41b6729061e2d3b9e8680bff556834babc3b82d43e0ea3f0db76",
+        "src/emcomm/benchmark_v2.py": "abb5ec61aab48237a7452c2c5ebd14f701582c56cc9d2a9a0837dfe8ff5581ae",
+        "src/emcomm/channel.py": "a0f2ff0d203b43fbd8ea9a2a0f8e4a37bbb4469fcf7e46902f1966c65d1ba659",
+        "src/emcomm/combos.py": "a97dab94b5671b9920374f19f949826853aa69a2d0e26f23e36c569c85423274",
+        "src/emcomm/config.py": "58237eb58e935d0fc384649603c7947ad12df58f76ac58a2ff2c0d0d90dd4c95",
+        "src/emcomm/env.py": "74bc3a2443f3a26dd32157d95e93e585b1e2b5bb80a8b96214738e8dfe70a8a4",
+        "src/emcomm/evaluate.py": "2a803750846d37588a19201051a0868fc16a3e2bd64a253cc1e467bf118a8a59",
+        "src/emcomm/heuristics.py": "0e0c1c8ccf41c212a1e378b5673ced28b5f61d69f1b5465b57385206c7ac394b",
+        "src/emcomm/layouts.py": "b5ae4c800ca3e7efe2f7368c49563461680214f4755ed7ce0640fa5ee09c5cd9",
+        "src/emcomm/lexicon.py": "3bbf38dad28e09976351dc1aeca2884a3ac0c6a041e459388d81bfed021a76ad",
+        "src/emcomm/plots.py": "d743225d7b4194349f05f77a8cd783cfda3c1845e8fd9ef75fecc2fcc24c9b64",
+        "src/emcomm/plots_v2.py": "a7ba281aadda119480365951af82a24f28e5d013bfd0946a47756647084d0f98",
+        "src/emcomm/policy.py": "f771141635489cfcf50f415c0f8329ce29b95de4b8b933c9a2c671962af8cab0",
+        "src/emcomm/ppo.py": "6410434e743abbcafea51b98480a679b1832f7d0b72bc2c7b1e8f2e837671c20",
+        "src/emcomm/replays.py": "68c62e493659f4e2dafd6d9a9dc3c2ef5f365669ee458cda8a3c776ad120d5bf",
+        "src/emcomm/replays_v2.py": "fdde3d0a511a38adc6b8b46b1fb2ac8598117a693032468784dac43f2d389fcc",
+        "src/emcomm/rollout.py": "14c8058053d3865d4ebffefe00a9cefd6e97167c5f14bb5591ee2d5a3e2943ac",
+        "src/emcomm/stats.py": "b3a0d3a06fcec8d09b47669c785081477c688c9130b86b479500ef70a6483b60",
+        "src/emcomm/sweep.py": "76745989a3e09c9521ed63499cb14bb735fd2120e6107bab90d7cf4d43981362",
+        "src/emcomm/train.py": "2f825892fda071293b3f918da0dce9bfbb54206b083d3c68915ca3f98f8e685d"
+      }
+    },
+    "biased_table_sha256": "d5f2ab4b51d055db377cb56d198312a31dba264c2b32175240d686c021093a2d",
+    "unbiased_table_sha256": "99bc9b1167fea2f7612bc966ad6a85c0afde903a215e8127880b85d91f7f716c",
+    "checkpoint_sha256": {
+      "0": "8f7ceb0bebb4114b824997a18017810a6aea711f5afc63ae46b0d4e5883af3d5",
+      "1": "da94a2edf0543ef703067b04c8b49a553aba6fa1e8515eb4c678c0bf81815169",
+      "2": "4771f4a0a22b1c437994ced826f8531ee00f8b9af26c57201b6a17627a81a1a2",
+      "3": "b24d7915214f1612e120729e231362d7fd9ad2fb33d32f7c24bcaead18148313",
+      "4": "ba513b3d531a866f4092511d488cdac1da25a853fff03a5dd61c89321dbe9734",
+      "5": "a9461e662e2e426baf2c429b0b58526f4f04300d4e9b131485399ea8c5185e16",
+      "6": "03ab67333993750bf959d8679cd1cfcd76acdcfac6bcf65be16e096445ee05c5",
+      "7": "d1702d49035b8bc1da86a1e252288c5b0e5b2a5cc370c772e15650906c401fb2",
+      "8": "e64d79758142d6bf3c07f2450cab508cb22e3c90da8f70822a1eb6532978cdd5",
+      "9": "cab47670fb893d75eba3464781dd9eb728c407f57ee008c5591c4b032f73914f",
+      "10": "dd334671a8c2a87611c0b136dae0e9650bbed3c0913b83a0dff2d7cf822a091f",
+      "11": "91a526dba5667d32a2739682d36230b5f165ea7b4154eb0dddf617aa68a9343e",
+      "12": "c79e0f653435bc4c75be28f880657b21c404fcccff6462ed417ca8aefe8b494e",
+      "13": "cebf6d08604adefe1b08aad859bebb906e19f550655fc0d37c47f0b0e0d00e48",
+      "14": "dfe35e32d507442eff3feb9af9562c45f9c2b0fca3888f1be1f3ec008371b5a0",
+      "15": "e0f9319998e7343c87207b6019fa43906d5439cc93eb73e502936f1755e8cae0",
+      "16": "4c200a81c7d85340e197b9752671ecaf47ad9a97682651b735060cc6d75c91b8",
+      "17": "51f15a298588f8fa2d22a1b67c3a7fa217d5177ad90db8474b68adc58e13abb3",
+      "18": "8b8202cf07c712365525f19d73fbe00340fcb3bfadaa38657017e85a399105c0",
+      "19": "d061837edc8a158df189cc5f4aee26e91b0185387e915a4edfc505357d4250a9"
+    },
+    "env": {
+      "grid_size": 12,
+      "wall_col": 4,
+      "view_radius": 3,
+      "n_item_types": 4,
+      "n_obstacles": 8,
+      "max_steps": 32,
+      "runner_slack": 12,
+      "pickup_bonus": 0.1,
+      "step_penalty": 0.01,
+      "vocab_size": 8,
+      "n_train_layouts": 48,
+      "n_eval_layouts": 24,
+      "layout_seed": 20260930,
+      "channel": "discrete",
+      "vocal_noise": 0.1,
+      "task": "types",
+      "n_values": 5,
+      "msg_words": 1,
+      "combo_seed": 20261003
+    },
+    "ppo": {
+      "n_envs": 64,
+      "rollout_len": 128,
+      "total_env_steps": 10002432,
+      "hidden": 128,
+      "lr": 0.001,
+      "gamma": 0.99,
+      "gae_lambda": 0.95,
+      "clip": 0.2,
+      "epochs": 4,
+      "n_minibatches": 4,
+      "vf_coef": 0.5,
+      "ent_move": 0.01,
+      "ent_msg": 0.01,
+      "sig_coef": 0.0,
+      "max_grad_norm": 0.5,
+      "checkpoint_every": 250
+    }
+  }
+}

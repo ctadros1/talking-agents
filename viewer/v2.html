@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Words That Combine</title>
+  <link rel="stylesheet" href="viewer.css">
+  <link rel="stylesheet" href="v2.css">
+</head>
+<body>
+  <header>
+    <h1>v2: Words That Combine</h1>
+    <p id="development-banner" class="development-banner" role="status" hidden>Scripted reference development data — not learned results</p>
+    <p class="sub"><span id="replay-source">Replays of test episodes.</span> The scout knows the target's color and shape and sends two words every step; the runner must pick the one matching item out of four look-alikes. Episodes marked <b>never seen</b> ask for a color–shape combination that never appeared in training. Drag to rotate, scroll to zoom. Turn on sound to hear what the runner hears. <a href="index.html">v1 replays</a></p>
+  </header>
+  <main>
+    <section class="controls" aria-label="Replay controls">
+      <label>Episode <select id="episode"></select></label>
+      <div class="variants" id="variants" role="tablist"></div>
+    </section>
+    <section class="stage3d">
+      <div id="scene" class="scene" aria-label="3D replay of the episode">
+        <div id="bubble-scout" class="bubble" hidden></div>
+        <div id="bubble-runner" class="bubble heard" hidden></div>
+        <button id="reset-camera" class="corner">Reset view</button>
+      </div>
+      <aside class="panel">
+        <p class="badge-row"><span id="badge" class="badge"></span></p>
+        <dl>
+          <dt>Step</dt><dd id="step"></dd>
+          <dt>Target</dt><dd id="target"></dd>
+          <dt>Scout says</dt><dd id="said"></dd>
+          <dt>Runner hears</dt><dd id="heard"></dd>
+          <dt>Runner carrying</dt><dd id="carrying"></dd>
+          <dt>Outcome</dt><dd id="outcome"></dd>
+        </dl>
+      </aside>
+    </section>
+    <section class="tape" aria-label="Message tape">
+      <div class="tape-row"><span class="tape-label">Scout says</span><div id="tape-said" class="cells"></div></div>
+      <div class="tape-row"><span class="tape-label">Runner hears</span><div id="tape-heard" class="cells"></div></div>
+    </section>
+    <section class="transport">
+      <button id="prev" aria-label="Previous step">&#9664;</button>
+      <button id="play">Play</button>
+      <button id="next" aria-label="Next step">&#9654;</button>
+      <input id="scrub" type="range" min="0" value="0" aria-label="Step">
+      <label>Speed <select id="speed"><option value="700">slow</option><option value="400" selected>normal</option><option value="180">fast</option></select></label>
+      <button id="sound" aria-pressed="false" title="Plays what the runner hears: word 1 as a note, word 2 as a lower note">Sound off</button>
+    </section>
+    <section id="dictionary-section" class="dictionary" aria-label="Learned dictionary">
+      <h2 id="dictionary-title">The scout's dictionary</h2>
+      <p id="dictionary-explainer" class="sub">How often the scout's first message uses each symbol, given the target's color or shape, over every test episode of this pair of agents. Darker cells show more frequent use; outlined cells show the current target and words.</p>
+      <div id="dictionary" class="dict-grid"></div>
+    </section>
+    <p id="missing" class="missing" hidden>No replay data found. Run <code>uv run python -m emcomm.replays_v2</code> to create viewer/data/replays_v2.js.</p>
+  </main>
+  <script src="vendor/three.min.js"></script>
+  <script src="data/replays_v2.js"></script>
+  <script src="v2.js"></script>
+</body>
+</html>

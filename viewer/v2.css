@@ -1,0 +1,33 @@
+.stage3d { display: grid; grid-template-columns: minmax(0, 1fr) 270px; gap: 16px; }
+.development-banner { margin: 12px 0; padding: 10px 14px; border: 2px solid #92400e; border-radius: 8px;
+                      background: #fef3c7; color: #78350f; font-weight: 800; text-align: center; }
+.scene { position: relative; aspect-ratio: 4 / 3; border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+         background: var(--card); touch-action: none; cursor: grab; }
+.scene:active { cursor: grabbing; }
+.scene canvas { display: block; width: 100%; height: 100%; border: 0; border-radius: 0; }
+.bubble { position: absolute; left: 0; top: 0; transform: translate(-50%, -100%); display: flex; gap: 4px; align-items: center;
+          padding: 4px 6px; border-radius: 10px; background: var(--card); border: 1px solid var(--line);
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); pointer-events: none; white-space: nowrap; font-size: 0.75rem; }
+.bubble.heard { opacity: 0.9; }
+.bubble[hidden] { display: none; }
+.word { display: inline-grid; place-items: center; min-width: 1.5em; height: 1.5em; padding: 0 2px; border-radius: 6px;
+        color: #fff; font-weight: 700; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+.word.silence { background: transparent; color: var(--muted); border: 1px dashed var(--line); }
+.corner { position: absolute; right: 8px; bottom: 8px; font-size: 0.8rem; padding: 4px 8px; }
+.badge-row { margin: 0 0 10px; }
+.badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 600;
+         background: var(--control); }
+.badge.unseen { background: #fde68a; color: #78350f; }
+.swatch { display: inline-block; width: 0.9em; height: 0.9em; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.pair { display: flex; gap: 1px; padding: 1px; border-radius: 6px; opacity: 0.45; cursor: pointer; }
+.pair .word { min-width: 18px; height: 18px; font-size: 0.7rem; }
+.pair.now { opacity: 1; outline: 2px solid var(--fg); }
+.dictionary h2 { font-size: 1.05rem; margin: 22px 0 4px; }
+.dict-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 32px; }
+.dict-grid table { border-collapse: collapse; font-size: 0.72rem; width: 100%; }
+.dict-grid caption { text-align: left; font-weight: 600; margin-bottom: 4px; }
+.dict-grid th, .dict-grid td { border: 1px solid var(--line); padding: 2px 3px; text-align: center; }
+.dict-grid th[scope="row"] { text-align: left; font-weight: 500; white-space: nowrap; }
+.dict-grid tr.active-property th[scope="row"] { font-weight: 800; }
+.dict-grid td.active-word { outline: 2px solid var(--fg); outline-offset: -2px; font-weight: 800; }
+@media (max-width: 760px) { .stage3d, .dict-grid { grid-template-columns: 1fr; } }

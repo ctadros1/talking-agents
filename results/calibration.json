@@ -1,0 +1,18 @@
+{
+  "mean_layout_acceptance": 0.5739814814814815,
+  "min_layout_acceptance": 0.45,
+  "scripted": {
+    "scripted_comm": 1.0,
+    "scripted_no_comm": 0.265,
+    "scripted_random_msg": 0.25,
+    "scripted_oracle": 1.0
+  },
+  "checks": {
+    "min_layout_acceptance >= 0.20": true,
+    "scripted_comm >= 0.98": true,
+    "scripted_oracle >= 0.98": true,
+    "0.18 <= scripted_no_comm <= 0.32": true,
+    "0.15 <= scripted_random_msg <= 0.35": true,
+    "headroom (comm - no_comm) >= 0.50": true
+  }
+}

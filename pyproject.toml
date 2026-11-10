@@ -1,0 +1,43 @@
+[project]
+name = "emcomm"
+version = "0.1.0"
+description = "Emergent communication in a split-information grid world (CAP6938 term project)"
+readme = "README.md"
+authors = [
+    { name = "Christian Tadros", email = "ctadros101@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.3",
+    "torch>=2.14.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.32,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.16.9",
+]
+report = [
+    "markdown>=3.11",
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["B905"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["emcomm"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.uv]
+default-groups = ["dev", "report"]

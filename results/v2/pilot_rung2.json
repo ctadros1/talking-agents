@@ -1,0 +1,30 @@
+{
+  "per_seed": {
+    "comm": [
+      0.3,
+      0.31,
+      0.245
+    ],
+    "no_comm": [
+      0.195,
+      0.18,
+      0.21
+    ],
+    "oracle": [
+      0.855,
+      0.86,
+      0.86
+    ]
+  },
+  "means": {
+    "comm": 0.285,
+    "no_comm": 0.19499999999999998,
+    "oracle": 0.8583333333333333
+  },
+  "checks": {
+    "oracle >= 0.80": true,
+    "no_comm <= 0.32": true,
+    "comm - no_comm >= 0.15": false
+  },
+  "comm_minus_no_comm": 0.09
+}
