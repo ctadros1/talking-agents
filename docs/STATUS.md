@@ -20,3 +20,8 @@ The evidence view preserves cards and semantically matched bar nodes across tabs
 Local verification: 241 Python tests passed. Eleven Node tests cover both phases' independent PyTorch/environment fixtures, cue privacy, two-word timing/interventions/reset, persistent comparison keys, camera projection synchronization and Worker routing. All four summaries and all 29 protected scientific files still verify exactly. Browser checks exercise live v2 success, all channel modes, target splits, both baseline checkpoints, v1/v2 switching, camera controls, replay icon updates, mobile page width and a bar visibly draining from its v1 value toward the v2 value. Production publication and final verification follow this source commit.
 
 Next action: publish and verify the live v2 update at the existing public URL.
+
+
+Production update verified: Cloudflare version `ec2a0b19-baa6-453e-a0aa-1e1558dd912e`, from public source commit `9c87d53`. The public page executes live two-word inference and completes a correct delivery; on-site channel interventions, baseline loading and responsive layout work without application errors. A production evidence-tab switch visibly drains the shared communication bar from the v1 value toward the v2 target. Both v2 binary payloads, the icon sprite, scene/evidence modules and results ZIP match the reviewed build byte for byte. The public project ZIP contains the exact new model and interface files. A fresh public clone builds the site, passes all eleven Node checks and verifies all four summaries and 29 protected scientific files. The existing protected site route continues to return its protected page.
+
+Next action: open the public site and run v2 live, or follow the README to run the same version locally.
