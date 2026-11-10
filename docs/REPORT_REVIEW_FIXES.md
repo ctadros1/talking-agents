@@ -10,7 +10,7 @@ Revised November 9, 2026, after the original benchmark and independent review we
 - The novelty statement precisely describes grouping predicted message distributions by cue. The objective is a task-specific adaptation of positive signalling. The ablation establishes its value relative to unbiased IPPO here, not superiority to the full Eccles method.
 - A new outcome audit partitions preserved comm and oracle evaluations into no pickup, wrong pickup, correct pickup without delivery and success. All 80 seed/split rows, hashes of 40 source logs and seed-bootstrap intervals are saved. `uv run python scripts/report_diagnostics.py` reproduces the summary from packaged counts; `--runs runs_v2` rebuilds counts from original complete logs. No checkpoint, training run, selection rule, metric or configuration changed.
 - The video review revision replaces the displayed static Python log with a real process launched during capture, streamed stdout and an exit code. It retains the actual browser inference captures. The 3D scene is a grid rendering, not a separate physics experiment.
-- Review narration is explicitly temporary local macOS Samantha synthesis. The full word-for-word script remains available for the student's recording. No claim is made that the student's own narration or live presentation is complete.
+- Review narration is explicitly temporary local macOS Samantha synthesis. The full word-for-word script remains available. Christian has now supplied his own recording for the final video; repeated takes and long pauses are edited from that recording. The temporary synthetic review cut is preserved separately. The live presentation remains a separate requirement.
 
 ## Remaining scientific limits
 

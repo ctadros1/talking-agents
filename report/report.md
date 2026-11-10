@@ -264,7 +264,7 @@ Deterministic CPU operations and seeded generators are enforced, and v1 weight/e
 
 Static viewers play saved trajectories. Fresh inference loads included final checkpoints and recomputes actions for a representative demo; it does not retrain. Complete run archives are separate. Proposed interpreter/stacking work is not part of these completed experiments.
 
-**AI assistance disclosure.** Claude and OpenAI ChatGPT/Codex assisted with planning, implementation, checks and refinement of this existing report, including November 9 submission preparation and the exploratory ablation. See `docs/AI_ASSISTANCE.md`. The author remains responsible for the work. The review video uses disclosed local synthetic narration pending the author's recording.
+**AI assistance disclosure.** Claude and OpenAI ChatGPT/Codex assisted with planning, implementation, checks and refinement of this existing report, including November 9 submission preparation and the exploratory ablation. See `docs/AI_ASSISTANCE.md`. The author remains responsible for the work. The accompanying video uses the author's recorded narration.
 
 **References.**
 

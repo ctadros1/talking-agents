@@ -1,3 +1,9 @@
+# Final student-voice coursework preparation — November 9, 2026
+
+Christian supplied his own narration. The final coursework video is prepared separately from the public simulator, using the supplied voice rather than synthetic speech, with repeated takes and long pauses edited out and visual sections synchronized. The public repository contains the exact fourteen-section Student-Video-Script.md and the updated eight-page report; it does not contain the private recording. The synthetic review cut is a separate historical artifact. The live class presentation remains separate.
+
+Validation: 249 Python tests pass, along with Ruff, formatting and diff checks. Scientific implementation, checkpoints, canonical values and the protected research bytes are unchanged. Final submission-archive and video checks are recorded with the separate coursework outputs.
+
 # Status
 
 ## Independent-review reporting revision — November 9, 2026
