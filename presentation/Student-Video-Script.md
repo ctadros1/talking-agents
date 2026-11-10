@@ -130,6 +130,6 @@ The extension establishes an important limit: communication success does not aut
 
 The project connects to the course's agent reinforcement learning and multi-agent systems material. Its contribution is a controlled implementation and evaluation, with the comparisons, negative findings, and limitations reported explicitly.
 
-Claude and ChatGPT or Codex assisted with planning, implementation, testing, and report refinement, as disclosed in the report. I remain responsible for understanding and explaining the work. 
+Claude and ChatGPT or Codex assisted with planning, implementation, testing, and report refinement, as disclosed in the report. I remain responsible for understanding and explaining the work.
 
 Thank you.
