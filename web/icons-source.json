@@ -1,0 +1,30 @@
+{
+  "library": "Lucide Static",
+  "version": "1.70.0",
+  "source": "https://registry.npmjs.org/lucide-static/-/lucide-static-1.70.0.tgz",
+  "package_sha256": "3d1f09df1c468abe512ee6d6596db0dc773fa46c61050e365f0c5fee5120f16a",
+  "license": "ISC",
+  "icons": [
+    "arrow-down-right",
+    "arrow-left",
+    "arrow-right",
+    "arrow-up-right",
+    "download",
+    "external-link",
+    "play",
+    "pause",
+    "rotate-ccw",
+    "step-forward",
+    "step-back",
+    "skip-forward",
+    "volume-2",
+    "volume-x",
+    "rotate-3d",
+    "house",
+    "music-2",
+    "box",
+    "move",
+    "zoom-in",
+    "zoom-out"
+  ]
+}

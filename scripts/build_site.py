@@ -15,7 +15,24 @@ def build():
     if OUT.exists():
         shutil.rmtree(OUT)
     OUT.mkdir(parents=True)
-    for name in ("index.html", "styles.css", "app.mjs", "engine.mjs", "favicon.svg", "models", "data"):
+    for name in (
+        "index.html",
+        "styles.css",
+        "app.mjs",
+        "engine.mjs",
+        "evidence.mjs",
+        "scene3d.mjs",
+        "icons.mjs",
+        "icon-nodes.mjs",
+        "icons.svg",
+        "icons.css",
+        "icons-source.json",
+        "lucide.LICENSE",
+        "replay-icons.js",
+        "favicon.svg",
+        "models",
+        "data",
+    ):
         source = ROOT / "web" / name
         if source.is_dir():
             shutil.copytree(source, OUT / name)
@@ -24,9 +41,16 @@ def build():
     shutil.copytree(ROOT / "viewer", OUT / "replays")
     for page in (OUT / "replays").glob("*.html"):
         content = page.read_text()
-        page.write_text(
-            content.replace("<header>", '<header><p><a href="../">← Talking Agents · live sandbox</a></p>', 1)
+        content = content.replace("</head>", '<link rel="stylesheet" href="../icons.css"></head>', 1)
+        content = content.replace("</body>", '<script src="../replay-icons.js" defer></script></body>', 1)
+        content = content.replace(
+            "<header>",
+            '<header><p><a class="back-link" href="../">'
+            '<svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><use href="../icons.svg#arrow-left"></use></svg>'
+            "Talking Agents · live sandbox</a></p>",
+            1,
         )
+        page.write_text(content)
     data = {}
     for key, name in (
         ("v1", "summary.json"),

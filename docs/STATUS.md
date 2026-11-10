@@ -1,6 +1,6 @@
 # Public project status
 
-The public edition includes a live v1 browser sandbox, v1/v2/vocal replay explorers, source-linked results and confidence intervals, a readable setup guide, the rendered research report, and downloadable seed tables/protocols. Four representative final Python checkpoints are bundled. No LLM service or API key is used.
+The public edition includes live v1 and v2 browser inference, a controllable 3D v2 view, v1/v2/vocal replay explorers, source-linked results and confidence intervals, a readable setup guide, the rendered research report, and downloadable seed tables/protocols. Four representative final Python checkpoints are bundled. No LLM service or API key is used.
 
 Publication destination: https://ctad.dev/talking-agents/ · public source: https://github.com/ctadros1/talking-agents . The original private development history and course administration are excluded. Scientific source/configuration/pre-registration bytes and canonical results are preserved; `research-provenance.json` pins the source and frozen-file hashes.
 
@@ -9,3 +9,14 @@ Validation before initial publication: 237 original tests passed, plus three pub
 Publication verified on November 9, 2026: the GitHub repository is PUBLIC with main as its default branch; unauthenticated clone and project ZIP downloads include the exact trained models and result tables. Initial Cloudflare publication: Worker `talking-agents`, version `88173d22-0fcf-4666-9004-67717ef9e773`, serves only the two declared publication routes. Production browser checks verify fresh live model execution, channel scrambling/silencing, no-message model loading, all result views and replay playback. HTML/model/report/results ZIP requests succeed; nonexistent assets return 404. The existing protected site's visible content and forms are unchanged. A fresh public clone builds without npm installation, passes all six Node tests, reproduces all four statistical summaries and completes fresh v1/v2 Python inference.
 
 Next action: use the public simulator or follow the README to run and inspect it locally. This publication does not submit the course assignment or create the author's narrated video.
+
+
+## Live v2 and interface update: November 9, 2026
+
+The browser now defaults to live v2 using the original final communication/no-communication checkpoints from seed 9. Both familiar and never-seen target banks contain 200 fixed held-out scenarios. Observations reproduce the 630-feature Python encoding, including the scout's hidden warehouse, the runner's hidden target, carrying attributes and two delayed words. Intact, both-word permutation, either-word permutation, silence and the separately trained no-message model are supported. The 3D renderer consumes live environment state and does not read recorded trajectories; v1 and archived replays remain available. Camera orbit/zoom/reset, keyboard access, offscreen rendering suspension and a 2D WebGL fallback are included.
+
+The evidence view preserves cards and semantically matched bar nodes across tabs. Bar widths and displayed numbers animate from their current values, missing comparisons collapse, and the selected-tab indicator slides. Reduced-motion preferences bypass the transitions. All measured values still come from frozen summary JSON. Locally vendored Lucide Static 1.70.0 (ISC) replaces UI glyphs across the homepage and served replay pages, including download/external-link icons and stateful transport/audio controls. Its license, pinned source and package digest are included; no icon CDN or npm install is needed to run the site.
+
+Local verification: 241 Python tests passed. Eleven Node tests cover both phases' independent PyTorch/environment fixtures, cue privacy, two-word timing/interventions/reset, persistent comparison keys, camera projection synchronization and Worker routing. All four summaries and all 29 protected scientific files still verify exactly. Browser checks exercise live v2 success, all channel modes, target splits, both baseline checkpoints, v1/v2 switching, camera controls, replay icon updates, mobile page width and a bar visibly draining from its v1 value toward the v2 value. Production publication and final verification follow this source commit.
+
+Next action: publish and verify the live v2 update at the existing public URL.

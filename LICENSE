@@ -23,3 +23,5 @@ SOFTWARE.
 Third-party components retain their own licenses:
 - viewer/vendor/: Three.js and its bundled license notice.
 - report/cvpr/: CVPR style files and their upstream notices.
+- web/icons.svg, web/icon-nodes.mjs: Lucide Static 1.70.0, ISC license;
+  see web/lucide.LICENSE and web/icons-source.json.

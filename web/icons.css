@@ -1,0 +1,37 @@
+.icon {
+  width: 1.1em;
+  height: 1.1em;
+  display: inline-block;
+  vertical-align: -0.15em;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+a .icon {
+  margin-left: 0.3em;
+}
+button .icon {
+  margin-right: 0.3em;
+}
+button:has(.icon) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2em;
+}
+a.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+}
+.back-link .icon {
+  margin: 0;
+}
+.cell .icon {
+  width: 13px;
+  height: 13px;
+  vertical-align: middle;
+}

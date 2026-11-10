@@ -1,30 +1,49 @@
 import { Policy, Episode } from "./engine.mjs";
+import { buttonLabel, canvasIcon } from "./icons.mjs";
+import { createLiveScene } from "./scene3d.mjs";
+import { EvidenceView, pct, pp, ci } from "./evidence.mjs";
 const $ = (id) => document.getElementById(id),
   colors = ["#c66b49", "#537fa4", "#ba9d3c", "#6c9270"],
   letters = ["A", "B", "C", "D"];
-const symbol = (n) => (n === 8 ? "–" : String(n));
+const v2Colors = ["#dc5b4b", "#bd8b13", "#4e8754", "#4f88be", "#9572bf"],
+  colorNames = ["red", "yellow", "green", "blue", "purple"],
+  shapeNames = ["cube", "sphere", "cone", "cylinder", "ring"];
+const symbol = (n) => (n === 8 ? "–" : String(n)),
+  message = (words) =>
+    Array.isArray(words) ? words.map(symbol).join(" · ") : symbol(words);
+const itemName = (world, k) =>
+  world.spec.item_attrs
+    ? `${colorNames[world.spec.item_attrs[k][0]]} ${shapeNames[world.spec.item_attrs[k][1]]}`
+    : `item ${letters[k]}`;
 let episode,
-  bank,
   playing = false,
   timer,
   requestVersion = 0,
   ready = false,
-  summary;
-const models = new Map();
+  summary,
+  simulation = "v2",
+  scene,
+  scenePromise,
+  sceneFailed = false,
+  selectedEvidence = "v1";
+const models = new Map(),
+  banks = new Map();
 async function json(url) {
-  const r = await fetch(url);
-  if (!r.ok) throw new Error(`Could not load ${url} (${r.status})`);
-  return r.json();
+  const response = await fetch(url);
+  if (!response.ok)
+    throw new Error(`Could not load ${url} (${response.status})`);
+  return response.json();
 }
-async function loadModel(condition) {
-  if (!models.has(condition))
+async function loadModel(key) {
+  if (!models.has(key))
     models.set(
-      condition,
+      key,
       (async () => {
-        const manifest = await json(`models/${condition}.json`),
-          r = await fetch(`models/${condition}.bin`);
-        if (!r.ok) throw new Error("Could not load trained model weights.");
-        const bytes = await r.arrayBuffer();
+        const manifest = await json(`models/${key}.json`),
+          response = await fetch(`models/${key}.bin`);
+        if (!response.ok)
+          throw new Error("Could not load trained model weights.");
+        const bytes = await response.arrayBuffer();
         if (crypto.subtle) {
           const digest = Array.from(
             new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)),
@@ -34,55 +53,139 @@ async function loadModel(condition) {
             throw new Error("Model integrity check failed. Reload this page.");
         }
         const weights = new Float32Array(bytes);
-        return manifest.agents.map((t) => new Policy(t, weights));
+        return {
+          manifest,
+          policies: manifest.agents.map((t) => new Policy(t, weights)),
+        };
       })(),
     );
-  return models.get(condition);
+  return models.get(key);
+}
+function loadBank(phase) {
+  if (!banks.has(phase))
+    banks.set(
+      phase,
+      json(phase === "v1" ? "data/scenarios.json" : "data/scenarios-v2.json"),
+    );
+  return banks.get(phase);
 }
 const descriptions = {
-  intact: "The scout's symbol reaches the runner one step later.",
+  intact:
+    "Both words arrive one step later. Their symbol meanings were learned.",
   permuted:
-    "A fixed random relabeling is applied for this episode. The policies are unchanged.",
+    "A separate fixed random relabeling is applied to each word for this episode.",
+  permuted_w1:
+    "Only the first word is relabeled; the second word reaches its partner intact.",
+  permuted_w2:
+    "Only the second word is relabeled; the first word reaches its partner intact.",
   silenced:
-    "The communicating policies still send symbols, but both agents hear silence.",
+    "The communicating policies still send messages, but both agents hear silence.",
   no_comm:
     "A different pair of policies, trained with a silent channel from the start.",
 };
 function pause() {
   playing = false;
   clearTimeout(timer);
-  $("play").textContent = episode?.world.done
-    ? "▶ Run again"
-    : "▶ Run episode";
+  buttonLabel(
+    $("play"),
+    "play",
+    episode?.world.done ? "Run again" : "Run episode",
+  );
+}
+function setSimulation(phase) {
+  simulation = phase;
+  document.querySelectorAll("[data-simulation]").forEach((b) => {
+    const selected = b.dataset.simulation === phase;
+    b.setAttribute("aria-selected", String(selected));
+    b.tabIndex = selected ? 0 : -1;
+  });
+  $("simulator").setAttribute("aria-labelledby", "sim-" + phase);
+  $("split-field").hidden = phase === "v1";
+  document.querySelectorAll("[data-v2-only]").forEach((option) => {
+    option.hidden = phase === "v1";
+    option.disabled = phase === "v1";
+  });
+  if (phase === "v1" && $("channel").value.startsWith("permuted_w"))
+    $("channel").value = "intact";
+  $("channel").querySelector('[value="permuted"]').textContent =
+    phase === "v2" ? "Scramble both words" : "Scramble symbol meanings";
+  reset();
 }
 async function reset() {
   pause();
   ready = false;
-  const version = ++requestVersion;
+  const version = ++requestVersion,
+    phase = simulation,
+    mode = $("channel").value,
+    split = $("split").value;
   ["play", "step", "restart"].forEach((id) => ($(id).disabled = true));
-  const mode = $("channel").value;
-  $("channel-help").textContent = descriptions[mode];
   $("model-status").textContent = "Loading trained agents…";
+  $("channel-help").textContent =
+    phase === "v1" && mode === "intact"
+      ? "The scout's symbol reaches the runner one step later."
+      : phase === "v1" && mode === "permuted"
+        ? "A fixed random relabeling is applied for this episode."
+        : descriptions[mode];
   try {
-    const policies = await loadModel(mode === "no_comm" ? "no_comm" : "comm");
+    const [{ manifest, policies }, bank] = await Promise.all([
+      loadModel(
+        (phase === "v2" ? "v2-" : "") +
+          (mode === "no_comm" ? "no_comm" : "comm"),
+      ),
+      loadBank(phase),
+    ]);
     if (version !== requestVersion) return;
+    const scenarios = phase === "v1" ? bank : bank[split];
     const scenario = Math.max(
       1,
-      Math.min(200, Math.floor(Number($("scenario").value) || 1)),
+      Math.min(scenarios.length, Math.floor(Number($("scenario").value) || 1)),
     );
     $("scenario").value = scenario;
+    $("scenario").max = scenarios.length;
     const seed = Math.max(
       0,
       Math.min(4294967295, Math.floor(Number($("seed").value) || 0)),
     );
     $("seed").value = seed;
-    episode = new Episode(bank[scenario - 1], policies, { seed, mode });
+    const next = new Episode(scenarios[scenario - 1], policies, {
+      seed,
+      mode,
+      hidden: manifest.hidden,
+    });
+    if (phase === "v2" && !scene && !sceneFailed) {
+      try {
+        scenePromise ??= createLiveScene($("scene-live"));
+        scene = await scenePromise;
+      } catch (error) {
+        sceneFailed = true;
+        console.warn(
+          "3D unavailable; the live simulation will use its 2D view.",
+          error.message,
+        );
+      }
+    }
+    if (version !== requestVersion) return;
+    episode = next;
     ready = true;
+    const use3d = phase === "v2" && scene && !sceneFailed;
+    $("scene-live").hidden = !use3d;
+    canvas.hidden = !!use3d;
+    $("view-help").hidden = phase === "v1";
+    $("view-help").textContent = use3d
+      ? "Drag to rotate · camera controls to zoom · keyboard arrows to orbit"
+      : "3D is unavailable on this device. The live model is running in 2D.";
+    if (scene) {
+      scene.setActive(!!use3d);
+      if (use3d) scene.load(episode.world);
+    }
     ["play", "step", "restart"].forEach((id) => ($(id).disabled = false));
     $("model-status").textContent =
-      `v1 · seed 19 · ${mode === "no_comm" ? "no-message model" : "communication model"}`;
+      `${phase} · seed ${manifest.seed} · ${mode === "no_comm" ? "no-message model" : "communication model"}`;
+    $("sandbox-caption").textContent =
+      `Live browser inference: ${phase} final checkpoints, training seed ${manifest.seed}. ${phase === "v2" ? "Two-word messages; 200 fixed familiar and 200 fixed never-seen target scenarios. The 3D scene renders the grid state." : "Choose from the 200 fixed held-out benchmark scenarios."} Actions are sampled live; JavaScript arithmetic and random sampling differ from PyTorch. These episodes illustrate behavior; published statistics come from the canonical Python evaluation across all training seeds.`;
     render();
   } catch (error) {
+    if (version !== requestVersion) return;
     $("model-status").textContent = "Model could not load";
     $("outcome").textContent = error.message;
     console.error(error);
@@ -106,10 +209,11 @@ $("play").addEventListener("click", () => {
   if (episode.world.done) {
     episode.reset();
     $("step").disabled = false;
+    if (simulation === "v2" && scene) scene.load(episode.world);
     render();
   }
   playing = true;
-  $("play").textContent = "Ⅱ Pause";
+  buttonLabel($("play"), "pause", "Pause");
   tick();
 });
 $("step").addEventListener("click", () => {
@@ -117,18 +221,52 @@ $("step").addEventListener("click", () => {
   tick();
 });
 $("restart").addEventListener("click", reset);
-for (const id of ["channel", "scenario", "seed"])
+for (const id of ["channel", "scenario", "seed", "split"])
   $(id).addEventListener("change", reset);
 $("new-scenario").addEventListener("click", () => {
-  $("scenario").value = (Number($("scenario").value) % 200) + 1;
+  $("scenario").value =
+    (Number($("scenario").value) % Number($("scenario").max)) + 1;
   reset();
+});
+const simTabs = [...document.querySelectorAll("[data-simulation]")];
+simTabs.forEach((button) => {
+  button.addEventListener("click", () =>
+    setSimulation(button.dataset.simulation),
+  );
+  button.addEventListener("keydown", (event) => {
+    if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+      event.preventDefault();
+      const index =
+        event.key === "Home"
+          ? 0
+          : event.key === "End"
+            ? 1
+            : 1 - simTabs.indexOf(button);
+      setSimulation(simTabs[index].dataset.simulation);
+      simTabs[index].focus();
+    }
+  });
 });
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) pause();
+  else scene?.schedule();
+});
+$("scene-live").addEventListener("renderer-lost", () => {
+  sceneFailed = true;
+  scene?.setActive(false);
+  $("scene-live").hidden = true;
+  canvas.hidden = false;
+  $("view-help").textContent =
+    "The 3D view was interrupted. Live inference continues in 2D.";
+  draw();
 });
 const canvas = $("world"),
   ctx = canvas.getContext("2d");
 function draw() {
+  if (simulation === "v2" && scene && !sceneFailed) {
+    scene.update(episode.world, episode.tape.at(-1));
+    return;
+  }
   const w = episode.world,
     cell = canvas.width / 12;
   ctx.clearRect(0, 0, 720, 720);
@@ -158,17 +296,32 @@ function draw() {
   ctx.font = "bold 30px Arial";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText("⌂", (dc + 0.5) * cell, (dr + 0.5) * cell);
+  canvasIcon(
+    ctx,
+    "house",
+    dc * cell + 18,
+    dr * cell + 18,
+    cell - 36,
+    "#fffef9",
+  );
   for (let j = 0; j < 4; j++)
     if (w.item_present[j]) {
       const [r, c] = w.item_pos[j];
-      ctx.fillStyle = colors[j];
+      ctx.fillStyle = w.spec.item_attrs
+        ? v2Colors[w.spec.item_attrs[j][0]]
+        : colors[j];
       ctx.beginPath();
       ctx.roundRect(c * cell + 12, r * cell + 12, cell - 24, cell - 24, 6);
       ctx.fill();
       ctx.fillStyle = "#fff";
       ctx.font = "bold 22px Arial";
-      ctx.fillText(letters[j], (c + 0.5) * cell, (r + 0.5) * cell + 1);
+      ctx.fillText(
+        w.spec.item_attrs
+          ? ["□", "○", "△", "▱", "◎"][w.spec.item_attrs[j][1]]
+          : letters[j],
+        (c + 0.5) * cell,
+        (r + 0.5) * cell + 1,
+      );
     }
   for (let a = 0; a < 2; a++) {
     const [r, c] = w.pos[a];
@@ -183,7 +336,9 @@ function draw() {
     ctx.font = "bold 23px Arial";
     ctx.fillText(a === 0 ? "S" : "R", (c + 0.5) * cell, (r + 0.5) * cell + 1);
     if (w.carrying[a] >= 0) {
-      ctx.fillStyle = colors[w.carrying[a]];
+      ctx.fillStyle = w.spec.item_attrs
+        ? v2Colors[w.spec.item_attrs[w.carrying[a]][0]]
+        : colors[w.carrying[a]];
       ctx.strokeStyle = "#fff";
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -194,127 +349,73 @@ function draw() {
   }
 }
 function render() {
-  const w = episode.world,
+  const world = episode.world,
     last = episode.tape.at(-1);
-  $("target").textContent = `Collect item ${letters[w.target]}`;
-  $("target").style.color = colors[w.target];
-  $("steps").textContent = `${w.t} / 32`;
+  $("target").textContent = `Collect ${itemName(world, world.target)}`;
+  $("target").style.color = world.spec.item_attrs
+    ? v2Colors[world.spec.item_attrs[world.target][0]]
+    : colors[world.target];
+  $("steps").textContent = `${world.t} / 32`;
   $("carrying").textContent =
-    w.carrying[1] < 0 ? "Nothing" : `Item ${letters[w.carrying[1]]}`;
-  $("sent").textContent = last ? symbol(last.sent[0]) : "—";
-  $("heard").textContent =
-    last && last.heard[1] !== 8 ? symbol(last.heard[1]) : "Silence";
+    world.carrying[1] < 0 ? "Nothing" : itemName(world, world.carrying[1]);
+  $("sent").textContent = last ? message(last.sent[0]) : "—";
+  $("heard").textContent = last ? message(last.heard[1]) : "Silence";
   $("reward").textContent = episode.return.toFixed(2);
-  const end = w.done;
-  $("outcome").textContent = end
+  const ended = world.done;
+  $("outcome").textContent = ended
     ? episode.outcome.success
       ? "Correct delivery. Goal reached."
-      : w.t >= 32
+      : world.t >= 32
         ? "Time limit reached. Try another channel."
         : "Wrong item delivered. Episode ended."
-    : w.t
+    : world.t
       ? "Agents are choosing their next action."
       : "Ready when you are.";
-  $("outcome").classList.toggle("fail", end && !episode.outcome.success);
+  $("outcome").classList.toggle("fail", ended && !episode.outcome.success);
   for (const [id, key, agent] of [
     ["tape-sent", "sent", 0],
     ["tape-heard", "heard", 1],
   ]) {
+    $(id).classList.toggle("two-words", episode.words === 2);
     $(id).replaceChildren(
       ...Array.from({ length: 32 }, (_, i) => {
         const el = document.createElement("span"),
           row = episode.tape[i];
         el.className = "tape-cell" + (!row ? " empty" : "");
-        el.textContent = row ? symbol(row[key][agent]) : "·";
-        el.title = `Step ${i + 1}${row ? ": " + (row[key][agent] === 8 ? "silence" : "symbol " + row[key][agent]) : ""}`;
+        el.textContent = row ? message(row[key][agent]) : "·";
+        el.title = `Step ${i + 1}${row ? ": " + message(row[key][agent]) : ""}`;
         return el;
       }),
     );
   }
   draw();
 }
-const pct = (x) => (100 * x).toFixed(1) + "%",
-  pp = (x) => (100 * x).toFixed(1) + " pp",
-  ci = (x, unit = pct) => `${unit(x.lo)}–${unit(x.hi)} · 95% CI`;
-const metric = (label, x, highlight = false, unit = pct) =>
-  `<article class="metric${highlight ? " highlight" : ""}"><div class="metric-label">${label}</div><div class="metric-value">${unit(x.mean)}</div><div class="metric-ci">${ci(x, unit)}</div></article>`;
-const bar = (label, x) =>
-  `<div class="bar-row"><span>${label}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max(0, Math.min(100, x * 100))}%"></div></div><strong>${pct(x)}</strong></div>`;
+const evidence = new EvidenceView($("result-content"));
 function showResults(phase) {
-  if (!summary) return;
-  const d = summary[phase],
-    c = d.conditions;
-  let cards, story, rows, foot;
-  if (phase === "v2") {
-    const seen = c.comm.held_out.success,
-      unseen = c.comm.unseen.success,
-      gain = d.comparisons.unseen.comm_minus_no_comm;
-    cards =
-      metric("Familiar combinations · new maps", seen, true) +
-      metric("Unseen color–shape combinations", unseen) +
-      metric("Unseen gain over no messages", gain, false, pp);
-    story =
-      "<strong>Communication transferred; the stronger generalization claim did not.</strong> Two-word messages helped on familiar color–shape combinations. On unseen combinations, the gain was positive but below the frozen 15 percentage point requirement. Claim A passed; Claim B failed; the hierarchy stopped before Claim C.";
-    rows =
-      bar("Learned messages · seen", seen.mean) +
-      bar("No messages · seen", c.no_comm.held_out.success.mean) +
-      bar("Learned messages · unseen", unseen.mean) +
-      bar("No messages · unseen", c.no_comm.unseen.success.mean) +
-      bar("Oracle · unseen", c.oracle.unseen.success.mean);
-    foot = `80 learned runs · 20 seeds × 4 conditions · 20.0 million environment steps per run. “Seen” uses familiar combinations on held-out layouts. The unseen support also permits a target-identification shortcut (${pct(summary.support.support_aware_no_message_identification_rate)} theoretically, before navigation); it is not a measured learned-policy success rate. This limits a compositional-language interpretation.`;
-  } else {
-    const s = c.comm.success,
-      b = c.no_comm.success,
-      g = d.comparisons.comm_minus_no_comm;
-    cards =
-      metric("Success with learned messages", s, true) +
-      metric("Success without messages", b) +
-      metric("Communication advantage", g, false, pp);
-    if (phase === "v1") {
-      story = `<strong>Stable, learned symbols improved coordination.</strong> The communicating pairs beat independently trained no-message and random-message controls. Relabeling their symbols reduced success by ${pp(d.comparisons.intact_minus_permuted.mean)} (${ci(d.comparisons.intact_minus_permuted, pp)}), supporting a causal role for stable symbol identities. The pre-registered criterion was met.`;
-      rows =
-        bar("Learned messages", s.mean) +
-        bar("No messages", b.mean) +
-        bar("Random messages", c.random_msg.success.mean) +
-        bar("Oracle · target revealed", c.oracle.success.mean);
-      foot =
-        "80 learned runs · 20 seeds × 4 conditions · 10.0 million environment steps per run. Bars compare separately trained conditions. This study used a cue-directed signalling objective; useful communication is not evidence that unmodified PPO learns it equally well.";
-    } else {
-      story = `<strong>A continuous pitch channel also carried useful information.</strong> Both policies learn with a pitch-valued message instead of a discrete symbol. Shuffling the channel reduced success by ${pp(d.comparisons.intact_minus_shuffled.mean)}. This is an exploratory extension with a different training budget, so its score is not a controlled ranking against v1.`;
-      rows = bar("Learned vocal messages", s.mean) + bar("No messages", b.mean);
-      foot =
-        "40 learned runs · 20 seeds × 2 conditions · 20.0 million environment steps per run. Pitch is continuous; discretized bins are only for analysis. Use the vocal replay viewer to hear saved episodes.";
-    }
-  }
-  $("result-content").innerHTML =
-    `<div class="metric-grid">${cards}</div><p class="result-story">${story}</p><div class="bar-table">${rows}</div><p class="result-foot">${foot}</p>`;
-  $("result-content").setAttribute("aria-labelledby", "tab-" + phase);
-  document.querySelectorAll("[data-phase]").forEach((b) => {
-    b.setAttribute("aria-selected", String(b.dataset.phase === phase));
-    b.tabIndex = b.dataset.phase === phase ? 0 : -1;
-  });
+  selectedEvidence = phase;
+  if (summary) evidence.update(summary, phase);
 }
-document.querySelectorAll("[data-phase]").forEach((button) => {
+const evidenceTabs = [...document.querySelectorAll("[data-phase]")];
+evidenceTabs.forEach((button) => {
   button.addEventListener("click", () => showResults(button.dataset.phase));
   button.addEventListener("keydown", (event) => {
     if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
     event.preventDefault();
-    const tabs = [...document.querySelectorAll("[data-phase]")],
-      index = tabs.indexOf(button),
+    const index = evidenceTabs.indexOf(button),
       next =
         event.key === "Home"
           ? 0
           : event.key === "End"
             ? 2
             : (index + (event.key === "ArrowRight" ? 1 : 2)) % 3;
-    showResults(tabs[next].dataset.phase);
-    tabs[next].focus();
+    showResults(evidenceTabs[next].dataset.phase);
+    evidenceTabs[next].focus();
   });
 });
 (async () => {
   try {
     summary = await json("data/results.json");
-    showResults("v1");
+    showResults(selectedEvidence);
     const a = summary.ablation;
     $("ablation-body").innerHTML =
       `<p class="result-story">With objective: <strong>${pct(a.biased.success.mean)}</strong>. Original objective: <strong>${pct(a.unbiased.success.mean)}</strong>. Paired advantage: <strong>${pp(a.biased_minus_unbiased.mean)}</strong> (${ci(a.biased_minus_unbiased, pp)}).</p>`;
@@ -324,13 +425,4 @@ document.querySelectorAll("[data-phase]").forEach((button) => {
     console.error(error);
   }
 })();
-(async () => {
-  try {
-    bank = await json("data/scenarios.json");
-    await reset();
-  } catch (error) {
-    $("model-status").textContent = "Unable to load scenarios";
-    $("outcome").textContent = error.message;
-    console.error(error);
-  }
-})();
+setSimulation("v2");

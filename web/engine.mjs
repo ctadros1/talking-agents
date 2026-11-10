@@ -86,7 +86,11 @@ export class World {
     this.done = false;
   }
   observe(a, heard) {
-    const out = new Float32Array(315),
+    const composite = !!this.spec.item_attrs,
+      features = composite ? 10 : 4;
+    const channels = features + 2,
+      words = composite ? 2 : 1;
+    const out = new Float32Array(composite ? 630 : 315),
       [r, c] = this.pos[a];
     for (let dr = -3; dr <= 3; dr++)
       for (let dc = -3; dc <= 3; dc++) {
@@ -98,22 +102,48 @@ export class World {
           continue;
         }
         out[offset] = Number(this.walls[rr][cc]);
+        if (composite && a === 0) {
+          if (cc > 4) out[offset] = 0;
+          continue;
+        }
         for (let j = 0; j < 4; j++)
           if (
             this.item_present[j] &&
             this.item_pos[j][0] === rr &&
             this.item_pos[j][1] === cc
-          )
-            out[(j + 1) * 49 + offset] = 1;
+          ) {
+            if (composite) {
+              const [color, shape] = this.spec.item_attrs[j];
+              out[(1 + color) * 49 + offset] = 1;
+              out[(6 + shape) * 49 + offset] = 1;
+            } else out[(j + 1) * 49 + offset] = 1;
+          }
         if (this.depot[0] === rr && this.depot[1] === cc)
-          out[5 * 49 + offset] = 1;
+          out[(features + 1) * 49 + offset] = 1;
       }
-    out[294] = r / 11;
-    out[295] = c / 11;
-    out[296 + this.carrying[a] + 1] = 1;
-    if (a === 0) out[301 + this.target] = 1;
-    out[305 + heard] = 1;
-    out[314] = this.t / 32;
+    let cursor = channels * 49;
+    out[cursor++] = r / 11;
+    out[cursor++] = c / 11;
+    if (composite) {
+      if (this.carrying[a] < 0) out[cursor] = 1;
+      else {
+        const [color, shape] = this.spec.item_attrs[this.carrying[a]];
+        out[cursor + 1 + color] = 1;
+        out[cursor + 6 + shape] = 1;
+      }
+    } else out[cursor + this.carrying[a] + 1] = 1;
+    cursor += features + 1;
+    if (a === 0) {
+      if (composite) {
+        const [color, shape] = this.spec.item_attrs[this.target];
+        out[cursor + color] = 1;
+        out[cursor + 5 + shape] = 1;
+      } else out[cursor + this.target] = 1;
+    }
+    cursor += features;
+    for (let word = 0; word < words; word++)
+      out[cursor + word * 9 + (words === 1 ? heard : heard[word])] = 1;
+    out[out.length - 1] = this.t / 32;
     return out;
   }
   step(moves) {
@@ -193,11 +223,22 @@ export class Episode {
   }
   reset() {
     this.random = seededRandom(this.seed);
-    this.mapping = permutation(seededRandom(this.seed ^ 0x51eeda));
+    this.words = this.spec.item_attrs ? 2 : 1;
+    const remapRandom = seededRandom(this.seed ^ 0x51eeda);
+    this.mapping =
+      this.words === 1
+        ? permutation(remapRandom)
+        : [permutation(remapRandom), permutation(remapRandom)];
     this.world = new World(this.spec);
     this.hidden = [new Float32Array(this.width), new Float32Array(this.width)];
-    this.heard = [8, 8];
-    this.lastSent = [8, 8];
+    this.heard =
+      this.words === 1
+        ? [8, 8]
+        : [
+            [8, 8],
+            [8, 8],
+          ];
+    this.lastSent = structuredClone(this.heard);
     this.tape = [];
     this.return = 0;
     this.outcome = null;
@@ -214,18 +255,33 @@ export class Episode {
       );
       this.hidden[a] = out.hidden;
       moves.push(sample(out.move, this.random));
-      sent.push(sample(out.message, this.random));
+      sent.push(
+        this.words === 1
+          ? sample(out.message, this.random)
+          : [
+              sample(out.message.slice(0, 8), this.random),
+              sample(out.message.slice(8, 16), this.random),
+            ],
+      );
     }
     this.outcome = this.world.step(moves);
     this.return += this.outcome.reward;
     this.lastSent = sent;
-    this.heard = sent.map((_, a) =>
-      this.mode === "silenced" || this.mode === "no_comm"
-        ? 8
-        : this.mode === "permuted"
-          ? this.mapping[sent[1 - a]]
-          : sent[1 - a],
-    );
+    this.heard = sent.map((_, a) => {
+      if (this.words === 1)
+        return this.mode === "silenced" || this.mode === "no_comm"
+          ? 8
+          : this.mode === "permuted"
+            ? this.mapping[sent[1 - a]]
+            : sent[1 - a];
+      return sent[1 - a].map((token, w) =>
+        this.mode === "silenced" || this.mode === "no_comm"
+          ? 8
+          : this.mode === "permuted" || this.mode === `permuted_w${w + 1}`
+            ? this.mapping[w][token]
+            : token,
+      );
+    });
     this.tape.push({
       t: this.world.t,
       sent: [...sent],

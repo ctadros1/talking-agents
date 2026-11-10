@@ -4,7 +4,7 @@
 
 Two independently learning agents must coordinate in a split-information grid world. The scout knows the requested item; the runner can reach and deliver it. Their symbol meanings are learned with a disclosed cue-directed signalling objective, never assigned in a dictionary.
 
-The public site includes real browser inference, channel interventions, results with confidence intervals, and recorded v1, compositional v2 and vocal-channel episodes. It uses no LLM, API key or external model service.
+The public site runs **v1 and v2 live**, with a 3D view for the compositional world, channel interventions, smoothly animated evidence charts and results with confidence intervals. Archived v1, v2 and vocal-channel episodes are also available. It uses no LLM, API key or external model service.
 
 ## Run the simulator locally
 
@@ -18,12 +18,13 @@ python3 scripts/serve.py --open
 
 Open **http://localhost:8000/**. On Windows, `py -3 scripts/serve.py --open` also works. If the port is busy, add `--port 8001`. Stop with Ctrl+C. Do not open `web/index.html` directly: browser model loading requires the local server. After downloading the repository, the site runs without internet access.
 
-- Press **Run episode** to execute the trained policies, or **Step** to inspect each decision.
+- Choose **v1 · Four-item world** or **v2 · Color + shape · live 3D**. V2 opens by default. Press **Run episode** to execute the trained policies, or **Step** to inspect each decision.
+- In v2, choose familiar or never-seen target combinations, and scramble both words or either word separately. Drag the 3D view to orbit; use the camera buttons to zoom/reset. With the canvas focused, arrow keys orbit, `+`/`-` zoom, and `0` resets the camera. Devices without WebGL fall back to a live 2D view.
 - Choose **Learned messages**, **Scramble symbol meanings**, **Silence the trained communicators**, or the separately **trained no-message model**.
 - Keep the scenario and action seed fixed to compare channel effects. Each condition resets recurrent memory and starts from the same geometry. Policy changes can change subsequent random sampling and trajectories.
 - The map shows the full state to the human. Each agent receives only its own observation. The runner never receives the target cue or the other agent's position. A shaded square marks its local view.
 - Message symbols arrive one step later. Symbol numbers do not encode a programmed meaning. A symbol's learned meaning is specific to its training run.
-- The browser uses actual exported v1 final weights from training seed 19, with stochastic action sampling. There are 200 fixed held-out scenarios. Its JavaScript sampling and floating-point operations differ from PyTorch. It is an interactive illustration, **not a replacement for the canonical benchmark**.
+- The browser uses actual exported final weights: v1 training seed 19 and v2 training seed 9, with stochastic action sampling. V1 has 200 fixed held-out scenarios; v2 has 200 familiar and 200 never-seen-combination scenarios, both on held-out maps. Its JavaScript sampling and floating-point operations differ from PyTorch. It is an interactive illustration, **not a replacement for the canonical benchmark**.
 
 The **Replay lab** contains saved trajectories. v2's 3D scene is a rendering of the grid world, not a 3D physics environment. Sound is opt-in in the replay viewers.
 
@@ -99,7 +100,9 @@ npx wrangler deploy --dry-run
 npm run deploy
 ```
 
-`cloudflare/worker.mjs` strips the publication prefix and serves only allowlisted static assets. No secrets or server-side model inference are used. `scripts/export_browser_models.py` regenerates browser weights and parity fixtures from the included final v1 checkpoints; run it with `uv run python` if changing the adapter. Tests compare GRU outputs and environment observations/transitions against independently produced PyTorch/Python fixtures.
+`cloudflare/worker.mjs` strips the publication prefix and serves only allowlisted static assets. No secrets or server-side model inference are used. `scripts/export_browser_models.py` regenerates browser weights and parity fixtures from the included final v1 and v2 checkpoints; run it with `uv run python` if changing the adapter. Tests compare GRU outputs, private observations, carrying features, transitions and two-word channel timing against independently produced PyTorch/Python fixtures.
+
+Shared evidence bars and metric cards remain mounted when you switch tabs: widths and numbers animate from the currently displayed value, including rapid tab changes. Comparisons absent from a tab collapse in place. Reduced-motion preferences disable these animations. Icons use a small locally vendored [Lucide](https://lucide.dev/) SVG subset (ISC licensed); `scripts/vendor_icons.py` records its pinned source and package digest, and normal builds need no external icon service.
 
 ## Project map
 

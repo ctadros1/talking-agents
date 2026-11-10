@@ -1,6 +1,6 @@
 """Export representative final policies and independent Python parity fixtures.
 
-Only creates web/models, web/data/scenarios.json and web/fixtures/parity.json.
+Exports both v1 and v2 to web/models, web/data/scenarios*.json and web/fixtures/parity*.json.
 It never trains, selects checkpoints or changes the frozen evaluation outputs.
 """
 
@@ -15,6 +15,7 @@ import numpy as np
 import torch
 
 from emcomm.benchmark import episode_sets
+from emcomm.benchmark_v2 import episode_sets as episode_sets_v2
 from emcomm.env import GridEnv
 from emcomm.train import load_checkpoint
 
@@ -27,7 +28,7 @@ def write_json(path, value):
 
 
 def serialize(spec):
-    return {
+    result = {
         "layout_id": int(spec.layout.layout_id),
         "walls": spec.layout.walls.tolist(),
         "item_pos": spec.item_pos.tolist(),
@@ -36,17 +37,23 @@ def serialize(spec):
         "target": int(spec.target),
         "runner_opt": int(spec.runner_opt),
     }
+    if spec.item_attrs is not None:
+        result["item_attrs"] = spec.item_attrs.tolist()
+    return result
 
 
-def main():
+def export_phase(phase):
     torch.set_num_threads(1)
     torch.use_deterministic_algorithms(True)
-    rng = np.random.default_rng(20261109)
+    rng = np.random.default_rng(20261109 if phase == "v1" else 20261110)
     cases = {"policies": [], "worlds": []}
     for condition in ("comm", "no_comm"):
-        checkpoint = ROOT / "demo_checkpoints/v1" / condition / "seed_0019/final.pt"
+        seed = 19 if phase == "v1" else 9
+        key = condition if phase == "v1" else f"v2-{condition}"
+        checkpoint = ROOT / "demo_checkpoints" / phase / condition / f"seed_{seed:04d}/final.pt"
         nets, cfg, ppo, saved = load_checkpoint(checkpoint)
-        specs = episode_sets(cfg)["held_out"]
+        splits = (episode_sets if phase == "v1" else episode_sets_v2)(cfg)
+        specs = splits["held_out"]
         env = GridEnv(cfg, 1)
         tensors, chunks, offset = [], [], 0
         for agent, net in enumerate(nets):
@@ -60,7 +67,7 @@ def main():
             for step in (0, 9, 28):
                 env.load(0, specs[step])
                 env.t[0] = step
-                heard = rng.integers(0, cfg.vocab_size + 1, (1, 2))
+                heard = rng.integers(0, cfg.vocab_size + 1, (1, 2) if phase == "v1" else (1, 2, 2))
                 obs = env.observe(heard, np.array([True, False]))[0, agent]
                 hidden = rng.normal(0, 0.3, ppo.hidden).astype(np.float32)
                 with torch.no_grad():
@@ -74,7 +81,7 @@ def main():
                     }
                 cases["policies"].append(
                     {
-                        "condition": condition,
+                        "condition": key,
                         "agent": agent,
                         "obs": obs.tolist(),
                         "hidden": hidden.tolist(),
@@ -82,9 +89,9 @@ def main():
                     }
                 )
         binary = b"".join(chunks)
-        (ROOT / "web/models" / f"{condition}.bin").write_bytes(binary)
+        (ROOT / "web/models" / f"{key}.bin").write_bytes(binary)
         write_json(
-            ROOT / "web/models" / f"{condition}.json",
+            ROOT / "web/models" / f"{key}.json",
             {
                 "condition": condition,
                 "seed": int(saved["seed"]),
@@ -96,11 +103,16 @@ def main():
                 "binary_sha256": hashlib.sha256(binary).hexdigest(),
             },
         )
-    write_json(ROOT / "web/data/scenarios.json", [serialize(s) for s in specs])
+    bank = (
+        [serialize(s) for s in specs]
+        if phase == "v1"
+        else {split: [serialize(s) for s in rows] for split, rows in splits.items() if split != "train"}
+    )
+    write_json(ROOT / "web/data" / ("scenarios.json" if phase == "v1" else "scenarios-v2.json"), bank)
     for i in range(28):
         spec = specs[i]
         env.load(0, spec)
-        heard = rng.integers(0, 9, (1, 2))
+        heard = rng.integers(0, 9, (1, 2) if phase == "v1" else (1, 2, 2))
         moves = rng.integers(0, 6, (1, 2))
         state = None
         if i >= 20:
@@ -141,8 +153,14 @@ def main():
                 },
             }
         )
-    write_json(ROOT / "web/fixtures/parity.json", cases)
-    print("Exported two final policy pairs, 200 fixed scenarios and Python parity fixtures.")
+    filename = "parity.json" if phase == "v1" else "parity-v2.json"
+    write_json(ROOT / "web/fixtures" / filename, cases)
+    print(f"Exported {phase}: two final policy pairs and independent Python parity fixtures.")
+
+
+def main():
+    export_phase("v1")
+    export_phase("v2")
 
 
 if __name__ == "__main__":
