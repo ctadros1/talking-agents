@@ -1,3 +1,13 @@
+# Status
+
+## Independent-review reporting revision — November 9, 2026
+
+The report remains eight CVPR two-column pages including references. Structural metrics now identify their actual evaluation pools, and the report-specific Figure 7 limits scripted reference lines to the seen split. Course relevance, the precise cue-group objective, conditional uncertainty and the registered minimum-effect rule are explained more directly. A declared retrospective outcome audit from 40 preserved v2 evaluation logs retains 80 seed/split count rows, source hashes and seed-bootstrap intervals; it does not alter a frozen experiment or promote a generalization claim. Reproduce it with `uv run python scripts/report_diagnostics.py`.
+
+The complete word-for-word narration script and local recording interface are included under `presentation/`. The separate review video uses disclosed local synthesis and actual Python launch-to-completion capture. The student's own narration and later live presentation remain separate actions. `docs/REPORT_REVIEW_FIXES.md` and `docs/SCIENTIFIC_QA.md` document the corrections and remaining limitations.
+
+Validation: all 249 Python tests and eleven Node tests pass; all four canonical summaries reproduce and all 29 protected scientific-file hashes match. Ruff, formatting and diff checks pass. The diagnostic summary reproduces from the packaged count table. Publication verification follows this source commit; historical entries below describe earlier snapshots.
+
 # Public project status
 
 The public edition includes live v1 and v2 browser inference, a controllable 3D v2 view, v1/v2/vocal replay explorers, source-linked results and confidence intervals, a readable setup guide, the rendered research report, and downloadable seed tables/protocols. Four representative final Python checkpoints are bundled. No LLM service or API key is used.

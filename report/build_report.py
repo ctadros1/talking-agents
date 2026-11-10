@@ -177,6 +177,9 @@ def load_data(root: Path = ROOT) -> dict:
     """Everything a placeholder can refer to: summary, calibration, meta, pilot rungs, and the vocal arm."""
     results = root / "results"
     data = json.loads((results / "summary.json").read_text())
+    diagnostics = results / "report_diagnostics/summary.json"
+    if diagnostics.exists():
+        data["diagnostics"] = json.loads(diagnostics.read_text())
     data["calibration"] = json.loads((results / "calibration.json").read_text())
     _, ppo = load_config(root / "configs" / "base.toml")
     data["meta"] = {

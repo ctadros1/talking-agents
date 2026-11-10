@@ -14,13 +14,13 @@ Can two independently learning agents develop and use a communication protocol t
 
 The starting method is independent recurrent PPO (Schulman et al., 2017; de Witt et al., 2020). The specific modification is an auxiliary objective that makes the scout's messages informative about its private target cue. The task contribution is to direct the signalling pressure toward the missing information needed by the partner, while leaving the symbol assignment and listener policy learned. The direct ablation removes only this objective. Channel controls answer a different question: whether a trained communicating pair benefits from receiving informative messages. Keeping these comparisons separate prevents a communication advantage from being mistaken for evidence about which training component caused it.
 
-This connects directly to **Topic 7: AI Agents**, particularly the course's agent reinforcement learning and multi-agent systems material. A policy maps local state to actions, a GRU supplies short-term memory, and shared task feedback trains coordination between separate agents. Unlike the course's language-model agent examples, these agents have no pretrained language, tool descriptions, planner prompts, or externally supplied dictionary. Their knowledge is encoded in the policies, and the channel is a learned interface between their different observations. The experiment therefore isolates a small part of the broader knowledge-system problem: getting information held by one component to influence another component's decisions.
+This implements **Topic 7: AI Agents**, specifically agent reinforcement learning and multi-agent systems. Local observations define the agent's information boundary; GRU memory summarizes observation history; factorized movement and message actions couple control with communication. Separate actor–critics learn from a shared reward without a centralized critic, exposing credit assignment: a scout's message can help only through the runner's later actions. The private cue and delayed channel make coordination depend on information exchange. Permutation and silence interventions test whether that learned interface affects decisions. These are implementation choices illustrating the course's broad agent topics, not claims that the lectures prescribe this architecture.
 
 ### Relation to prior work
 
 Foerster et al. (2016) study learned communication in multi-agent reinforcement learning, and Lazaridou et al. (2017) study coordination through emergent symbols. This project follows that research direction in an intentionally small navigation task. It does not claim to introduce emergent communication or to outperform those systems on their benchmarks.
 
-The closest methodological antecedent is Eccles et al. (2019), who introduce positive-signalling and positive-listening biases. Their signalling objective relates messages to a speaker's trajectory. Here the statistic groups message distributions by the private target cue, a task-specific adaptation that ignores nuisance variation in the scout's position. I retain ordinary reward-based listener learning. Comparing against unbiased IPPO isolates the added cue-directed term; it does **not** establish that this adaptation outperforms Eccles et al.'s original full method. An equal-budget implementation of their trajectory objective would be needed for that stronger claim.
+The closest methodological antecedent is Eccles et al. (2019), who introduce positive-signalling and positive-listening biases. Their signalling objective relates messages to a speaker's trajectory. Here the statistic groups message distributions by the private target cue, a task-specific adaptation that averages over within-cue variation in the scout's position. Specifically, it subtracts the cue-frequency-weighted entropy of each cue-group mean message distribution from the entropy of the batch mean. It does not minimize every individual message distribution's entropy. In v2, each word is rewarded against the joint color–shape cue, so the objective does not enforce a property per word. I retain ordinary reward-based listener learning. Comparing against unbiased IPPO isolates the added cue-directed term; it does **not** establish that this adaptation outperforms Eccles et al.'s original full method. An equal-budget implementation of their trajectory objective would be needed for that stronger claim.
 
 Lowe et al. (2019) show why message correlations can be misleading when listeners do not use the channel. This motivates the interventions and the explicit comparison with informative but unheard scouts. Chaabouni et al. (2020) distinguish structural compositionality from generalization to new combinations. The second experiment follows that distinction: task transfer, property-level structure and intervention sensitivity are measured separately, and none alone licenses a language-like compositionality claim.
 
@@ -93,7 +93,7 @@ The hypotheses were pre-registered before any benchmark seed was trained:
 - **H1:** the comm − no-comm gain is at least 15 pp, with a CI that excludes 0.
 - **H2:** the intact − permuted drop is at least 10 pp, with a CI that excludes 0.
 
-The independent unit is a trained seed, not an evaluation episode. The repeated episodes estimate a particular policy's performance; the seed bootstrap represents training variability. The fixed episode set improves comparability but does not represent uncertainty across arbitrary map generators. Evaluation is stochastic under the same fixed generator seed, and every reported checkpoint is the final one. Held-out outcomes never select a checkpoint, pilot setting or training budget.
+The independent unit is a trained seed, not an evaluation episode. The repeated episodes estimate a particular policy's performance; the seed bootstrap represents training variability. These intervals are conditional on the fixed 200 scenarios per split: they do not resample tasks, map generators or hold-out matchings. Evaluation is stochastic under the same fixed generator seed, and every reported checkpoint is the final one. Held-out outcomes never select a checkpoint, pilot setting or training budget.
 
 ## 5. Results
 
@@ -125,8 +125,6 @@ Silencing the channel lowers success even further than permuting it ({{compariso
 
 Mutual information between the target and the scout's first symbol is {{conditions.comm.mi_first_msg|bits}} for learned comm (the maximum is 2 bits). For comparison, it is {{conditions.no_comm.mi_first_msg|bits}} for no-comm scouts, whose symbols nobody hears, and {{conditions.random_msg.mi_first_msg|bits}} for random-message scouts. MI describes the *speaker* only: a scout can be informative while the runner ignores it. That is why the permutation test, not MI, carries the causal claim (Lowe et al., 2019).
 
-Because the informativeness bias applies in every condition, scouts whose symbols are never delivered are just as informative, which is the clearest demonstration that MI measures the speaker, not the listener.
-
 ![Protocol](../results/figures/fig_protocol.png)
 <em class="cap">Figure 5. P(first symbol | target) for the median comm seed.</em>
 
@@ -134,7 +132,7 @@ Figure 5 shows that some targets are expressed with more than one symbol (synony
 
 ## 7. Discussion
 
-The agents invented a working protocol. Learned communication beat the no-communication control by the margin reported above, on maps they never trained on. Scrambling the symbol meanings removed the advantage and reduced performance to roughly guessing levels, so the runner's behavior depends on what particular symbols mean, not merely on hearing something. Random messages did not reproduce the gain, supporting the value of information over input variability alone. Figure 5 shows an unambiguous code for this representative seed: each used symbol points to one target, although the assignment differs across seeds. Without the informativeness bias, the same agents did not develop a protocol within the three-seed pilot budget (section 11). The bias rewards cue-dependent messages without specifying their symbol assignment. The listener learns to use those messages through shared task reward.
+Stable symbol identities support coordination on held-out maps: random inputs do not reproduce the gain, and scrambling removes it. The bias encourages cue-dependent messages without prescribing their assignment; shared reward trains the listener. This supports a useful task-specific protocol, not natural language or a universal communication method.
 
 ### Original-method comparison
 
@@ -146,7 +144,7 @@ The original train-only pilots compared three seeds per setting, giving unbiased
 
 An intervention changes the receiver's information while retaining the learned networks, layouts and target tasks. A drop under a fresh symbol permutation supports reliance on stable message identities. It does not show that a message has a human-like semantic interpretation: a learned joint controller can use arbitrary codes, repeated signals or history-dependent conventions. Silence is additionally outside the communicating listener's usual input distribution, so it is a useful ablation but a less specific test of symbol meaning.
 
-Errors can arise before picking, at target identification, or during delivery. The oracle is the navigation and control reference, while no communication and random messages measure performance without a useful information channel. The representative replay is chosen by the fixed median-seed rule and illustrates particular successes and failures; it is not an independent statistical sample or a substitute for aggregate performance. The v2 property and wrong-pick measures below help distinguish partial target identification from joint success, but exclude episodes without a pick where their definitions condition on picking. Such conditional diagnostics must not be read as overall task accuracy.
+Conditional property measures below exclude episodes without a pick, so they are not overall task accuracy. The median-seed demonstration illustrates outcomes; it is not an independent sample or a substitute for aggregate performance.
 
 ## 8. Exploratory extension: a vocal channel
 
@@ -203,8 +201,8 @@ The scripted references confirm the intended information structure on seen combi
 | Random messages | {{v2.conditions.random_msg.held_out.success|ci}} | {{v2.conditions.random_msg.unseen.success|ci}} |
 | Oracle | {{v2.conditions.oracle.held_out.success|ci}} | {{v2.conditions.oracle.unseen.success|ci}} |
 
-![v2 success](../results/v2/figures/fig_v2_success.png)
-<em class="cap">Figure 7. Success on seen and never-seen color–shape combinations. Reference lines are scripted identification-and-navigation results, not learned baselines.</em>
+![v2 success](figures/fig_v2_success_scoped.png)
+<em class="cap">Figure 7. Success on seen and never-seen color–shape combinations. Scripted reference lines apply only to the seen panel; no unseen reference or ceiling is implied. Error bars bootstrap training seeds.</em>
 
 **Interventions and property-level behavior.** Whole-message permutation tests whether the listener depends on the learned message identities. The word-specific interventions localize sensitivity but do not, by themselves, assign a property meaning to a word.
 
@@ -220,23 +218,34 @@ The scripted references confirm the intended information structure on seen combi
 | Wrong picks retaining shape only | {{v2.conditions.comm.held_out.twin_shape|ci}} | {{v2.conditions.comm.unseen.twin_shape|ci}} |
 | Wrong picks retaining neither | {{v2.conditions.comm.held_out.twin_opposite|ci}} | {{v2.conditions.comm.unseen.twin_opposite|ci}} |
 
-**Lexicon and structural metrics.** Figure 8 shows the median comm seed's first-message symbol frequencies. The pooled seed-level measures below describe whether word positions align with properties; they are consistent with compositional organization when the patterns agree, but they are not categorical proof of compositionality.
+**Lexicon and structural metrics.** Figure 8 shows the median comm seed's first-message symbol frequencies. Word-MI estimates use 200 seen episodes per seed; structural measures pool 200 seen and 200 unseen episodes per seed. All entries average seed-level estimates; they are consistent with compositional organization when the patterns agree, but they are not categorical proof of compositionality.
 
-| Descriptive measure, seen combinations | Mean |
+| Descriptive measure (evaluation pool) | Mean |
 |---|---|
-| Word 1 MI with color | {{v2.conditions.comm.held_out.mi_w1_color|bits}} |
-| Word 1 MI with shape | {{v2.conditions.comm.held_out.mi_w1_shape|bits}} |
-| Word 2 MI with color | {{v2.conditions.comm.held_out.mi_w2_color|bits}} |
-| Word 2 MI with shape | {{v2.conditions.comm.held_out.mi_w2_shape|bits}} |
-| Topographic similarity | {{v2.conditions.comm.held_out.topsim|num2}} |
-| Positional disentanglement | {{v2.conditions.comm.held_out.posdis|num2}} |
+| Word 1 MI with color (seen) | {{v2.conditions.comm.held_out.mi_w1_color|bits}} |
+| Word 1 MI with shape (seen) | {{v2.conditions.comm.held_out.mi_w1_shape|bits}} |
+| Word 2 MI with color (seen) | {{v2.conditions.comm.held_out.mi_w2_color|bits}} |
+| Word 2 MI with shape (seen) | {{v2.conditions.comm.held_out.mi_w2_shape|bits}} |
+| Topographic similarity (seen + unseen) | {{v2.conditions.comm.held_out.topsim|num2}} |
+| Positional disentanglement (seen + unseen) | {{v2.conditions.comm.held_out.posdis|num2}} |
 
 ![v2 dictionary](../results/v2/figures/fig_v2_lexicon.png)
 <em class="cap">Figure 8. First-message symbol frequencies by target color and shape for the median comm seed. Any word–property alignment is descriptive and must be read together with the intervention and accuracy results.</em>
 
 **Unseen-support limitation.** The unseen target prior differs from ordinary seen-square sampling. The five held-out pairs form a one-to-one matching. A source-only exhaustive enumeration finds {{v2.support_reference.unseen_prior.equiprobable_target_square_states}} equally likely target–square states: {{v2.support_reference.unseen_prior.held_out_candidate_count_distribution.1}} contain one held-out candidate and {{v2.support_reference.unseen_prior.held_out_candidate_count_distribution.2}} contain two. A strategy that knows only this support identifies the target before navigation at {{v2.support_reference.support_aware_no_message_identification_rate|pct}} in expectation; knowing either property plus the matching identifies it at {{v2.support_reference.one_property_plus_matching_identification_rate|pct}}. This is a theoretical identification calculation, not learned performance or navigation success. Therefore H4 is exclusively a test of unseen success above the fixed {{v2.support_reference.fixed_h4_reference|pct}} reference. It is not an unseen one-property ceiling and does not establish transfer of both properties or compositionality.
 
-**Interpretation.** {{v2.report.interpretation}}
+**Interpretation.** {{v2.report.interpretation}} Passing the seen rule requires a point gain of at least 15 pp and a CI excluding zero; it does not establish a 95% lower bound of 15 pp.
+
+**Post-hoc failure audit.** After inspecting these results, I partitioned the existing intact comm and silenced oracle evaluations into four mutually exclusive outcomes (20 seeds, 200 episodes/split). The table shows seed means; hashed source records, all counts and seed-bootstrap intervals are retained in `results/report_diagnostics`.
+
+| Model / split | No pickup | Wrong pickup | Correct pickup, no delivery |
+|---|---|---|---|
+| Comm / seen | {{diagnostics.conditions.comm.held_out.no_pick|mpct}} | {{diagnostics.conditions.comm.held_out.wrong_pick|mpct}} | {{diagnostics.conditions.comm.held_out.correct_pick_no_delivery|mpct}} |
+| Comm / unseen | {{diagnostics.conditions.comm.unseen.no_pick|mpct}} | {{diagnostics.conditions.comm.unseen.wrong_pick|mpct}} | {{diagnostics.conditions.comm.unseen.correct_pick_no_delivery|mpct}} |
+| Oracle / seen | {{diagnostics.conditions.oracle.held_out.no_pick|mpct}} | {{diagnostics.conditions.oracle.held_out.wrong_pick|mpct}} | {{diagnostics.conditions.oracle.held_out.correct_pick_no_delivery|mpct}} |
+| Oracle / unseen | {{diagnostics.conditions.oracle.unseen.no_pick|mpct}} | {{diagnostics.conditions.oracle.unseen.wrong_pick|mpct}} | {{diagnostics.conditions.oracle.unseen.correct_pick_no_delivery|mpct}} |
+
+The remainder is successful delivery. Correct-target pickup without delivery directly identifies post-pick navigation/time failures; no pickup mixes causes, and wrong pickup does not isolate a language error. The oracle also loses success on unseen cases, so the comm drop cannot be attributed solely to composition. This retrospective description adds no training, selection or confirmatory claim.
 
 ## 10. Limitations
 
@@ -250,20 +259,12 @@ The scripted references confirm the intended information structure on seen combi
 
 ## 11. Reproducibility
 
-The source, locked Python environment, per-seed tables, summaries, preregistrations (`prereg-v1`, `prereg-v2`), deviations and viewers are included. Train-only pilot selection used seeds 1000–1002 for v1 and 2000–2002 for v2. The table reports these small selection studies, not benchmark evidence. The fixed decision tables selected the biased v1 configuration and v2 rung 1 before benchmark training.
-
-| Train-only pilot | Comm | No comm | Oracle |
-|---|---|---|---|
-| v1 pure IPPO | {{pilot.rung0.means.comm|pct}} | {{pilot.rung0.means.no_comm|pct}} | {{pilot.rung0.means.oracle|pct}} |
-| v1 cue bias | {{pilot.rung1.means.comm|pct}} | {{pilot.rung1.means.no_comm|pct}} | {{pilot.rung1.means.oracle|pct}} |
-| v2 rung 1 | {{v2.pilot.rung1.means.comm|pct}} | {{v2.pilot.rung1.means.no_comm|pct}} | {{v2.pilot.rung1.means.oracle|pct}} |
-| v2 rung 2 | {{v2.pilot.rung2.means.comm|pct}} | {{v2.pilot.rung2.means.no_comm|pct}} | {{v2.pilot.rung2.means.oracle|pct}} |
-
+The source, locked environment, per-seed tables, summaries, preregistrations (`prereg-v1`, `prereg-v2`), deviations and viewers are included. Train-only pilot selection used seeds 1000–1002 for v1 and 2000–2002 for v2. The fixed decision tables selected biased v1 and v2 rung 1 before benchmark training. The guide retains the pilot table; these small selection studies are not benchmark evidence.
 Deterministic CPU operations and seeded generators are enforced, and v1 weight/evaluation golden regressions remain intact. Bitwise agreement across hardware or library versions is not assumed. The vocal arm was declared exploratory before v1 pre-registration; the added original-method ablation is post-hoc. Neither expands the original confirmatory claims.
 
-Static viewers illustrate exported trajectories. A separate fresh-inference command loads the included representative final checkpoints and produces new episode output for the live demo. Full retraining uses the frozen commands; complete trained-run archives are separate. The unseen-support calculation uses frozen source and configuration without learned results. Later interpreter and stacking proposals are not completed experiments in this report.
+Static viewers play saved trajectories. Fresh inference loads included final checkpoints and recomputes actions for a representative demo; it does not retrain. Complete run archives are separate. Proposed interpreter/stacking work is not part of these completed experiments.
 
-**AI assistance disclosure.** Claude and OpenAI ChatGPT/Codex assisted with planning, implementation, checks and refinement of this existing report. The November 9 request concerned course-requirement auditing and submission preparation, including the exploratory ablation and presentation materials. Details are in `docs/AI_ASSISTANCE.md`. The author remains responsible for the text, implementation and interpretation, and supplies his own narration.
+**AI assistance disclosure.** Claude and OpenAI ChatGPT/Codex assisted with planning, implementation, checks and refinement of this existing report, including November 9 submission preparation and the exploratory ablation. See `docs/AI_ASSISTANCE.md`. The author remains responsible for the work. The review video uses disclosed local synthetic narration pending the author's recording.
 
 **References.**
 

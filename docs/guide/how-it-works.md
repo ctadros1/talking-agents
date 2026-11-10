@@ -627,7 +627,7 @@ The word-specific success drops are {{v2.comparisons.held_out.intact_minus_permu
 <img src="../../results/v2/figures/fig_v2_lexicon.png" style="width: 80%">
 <p class="cap">The median comm seed's learned lexicon. Compare each word's color and shape bands; an apparent alignment is descriptive evidence, not a verdict by itself.</p>
 
-For the learned comm condition on seen combinations, topographic similarity is {{v2.conditions.comm.held_out.topsim|num2}} and positional disentanglement is {{v2.conditions.comm.held_out.posdis|num2}}. Values nearer 1 indicate stronger structure under those definitions, but neither number proves compositionality.
+For the learned comm condition pooled across seen and unseen combinations (400 episodes per seed), topographic similarity is {{v2.conditions.comm.held_out.topsim|num2}} and positional disentanglement is {{v2.conditions.comm.held_out.posdis|num2}}. Values nearer 1 indicate stronger structure under those definitions, but neither number proves compositionality.
 
 ### 7.5 Why 50% is not an unseen ceiling
 

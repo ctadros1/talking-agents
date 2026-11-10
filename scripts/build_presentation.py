@@ -204,7 +204,7 @@ def slides():
                 f"Unseen combinations: {mean(v2['conditions']['comm']['unseen']['success'])}",
                 "Communication supported · Generalization criterion not met",
             ],
-            "image": "../results/v2/figures/fig_v2_success.png",
+            "image": "../report/figures/fig_v2_success_scoped.png",
             "kind": "image",
             "notes": (
                 f"The second experiment asks about targets with a color and a shape, communicated using "

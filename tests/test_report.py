@@ -101,7 +101,14 @@ def _synthetic_v2_data(claims=None):
         },
     )
     summary["report"] = build_report._v2_report_fields(summary)
-    return {"v2": summary}
+    diagnostics = {
+        condition: {
+            split_name: {key: _ci(0.1, 0.05, 0.15) for key in ("no_pick", "wrong_pick", "correct_pick_no_delivery")}
+            for split_name in ("held_out", "unseen")
+        }
+        for condition in ("comm", "oracle")
+    }
+    return {"v2": summary, "diagnostics": {"conditions": diagnostics}}
 
 
 def _between(path, start, end):

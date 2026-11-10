@@ -41,7 +41,7 @@ Every displayed website statistic is loaded from the committed `results/*/summar
 | Vocal (`results/vocal/`) | Does a continuous pitch channel support coordination? | Exploratory; its budget differs from v1. |
 | Objective ablation (`results/ablation_unbiased/`) | Does removing only the cue-directed signalling objective hurt performance? | Full-budget, 20-seed comparison; explicitly post-hoc and exploratory. |
 
-Each condition uses **20 independent training seeds**, and each seed is evaluated on **200 fixed episodes per split/intervention**. Seeds, not individual reused episodes, are the independent units for 95% bootstrap intervals. v1 and v2 each have 80 runs; vocal has 40; the supplementary objective ablation adds 20. Repeated evaluations are not thousands of independently sampled scenarios.
+Each condition uses **20 independent training seeds**, and each seed is evaluated on **200 fixed episodes per split/intervention**. Seeds, not individual reused episodes, are the independent units for 95% bootstrap intervals. v1 and v2 each have 80 runs; vocal has 40; the supplementary objective ablation adds 20. Repeated evaluations are not thousands of independently sampled scenarios. The intervals are conditional on the fixed 200 scenarios per split; they do not resample tasks, generators or hold-out matchings.
 
 The no-communication baseline is independently trained. Silencing or permuting messages intervenes on already trained communicators and answers a different question. The oracle is a learned reference with target knowledge; scripted references have privileged map information. Neither should be presented as an equally informed competing method.
 
@@ -54,6 +54,7 @@ Install **[uv](https://docs.astral.sh/uv/getting-started/installation/)**. The e
 ```bash
 uv sync --frozen
 uv run python scripts/verify_results.py
+uv run python scripts/report_diagnostics.py
 uv run pytest -q
 uv run ruff check .
 uv run ruff format --check .
@@ -122,3 +123,9 @@ Shared evidence bars and metric cards remain mounted when you switch tabs: width
 This is a clean public snapshot of the author's project; it intentionally has no private coursework administration or old development history. [Provenance](research-provenance.json) records the source commit and hashes of unchanged scientific files. Original frozen source/configurations were copied byte for byte; the browser adapter is additive. Historical source hashes in preregistration and result records refer to the original research repository. Public history begins with this snapshot and does not pretend to contain those historical tags. [Deviations and scope](docs/DEVIATIONS.md). [AI assistance disclosure](docs/AI_ASSISTANCE.md).
 
 Code and author-owned documentation/models are MIT licensed; bundled third-party components keep their own notices. See [LICENSE](LICENSE).
+
+## Independent-review corrections
+
+The revised eight-page report labels each structural metric's actual evaluation pool and draws scripted references only in their seen-split panel. A clearly post-hoc outcome audit partitions the existing v2 comm and oracle episodes into no pickup, wrong pickup, correct pickup without delivery and success. The packaged counts and seed-bootstrap intervals live in `results/report_diagnostics/`; the reproduction command above rebuilds the summary without the full run archive. These diagnostics do not isolate the cause of a language-generalization failure. All canonical benchmark values and protected research files are unchanged. See [review response and remaining limitations](docs/REPORT_REVIEW_FIXES.md).
+
+The full [word-for-word narration script](presentation/Read-Aloud-Script.md) is rendered from saved summaries with `python3 scripts/build_read_aloud.py`. A separately labeled review video uses temporary local synthesis; the student's voice recording and live presentation remain separate actions.

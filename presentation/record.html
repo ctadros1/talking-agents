@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Record your CAP6938 presentation</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0c1016;color:#edf3fa;font:17px/1.5 system-ui,sans-serif}main{max-width:1400px;margin:auto;padding:24px}h1{font-size:25px;margin:0 0 8px}p{margin:8px 0;color:#bdcad8}nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0}button,a{font:inherit}button{padding:10px 18px;border:1px solid #526378;border-radius:8px;background:#192431;color:#fff;cursor:pointer}button.primary{background:#ffcc55;color:#131820;border-color:#ffcc55;font-weight:700}button:disabled{opacity:.4;cursor:default}button:focus-visible,a:focus-visible{outline:3px solid #ffcc55;outline-offset:3px}a{color:#ffcc55}canvas{display:block;width:100%;height:auto;border:1px solid #354355;border-radius:10px}aside{margin:18px 0;padding:18px 24px;background:#17202b;border-radius:10px}aside h2{font-size:17px;margin:0 0 8px;color:#ffcc55}#notes{font-size:18px;max-width:1050px;line-height:1.7;color:#fff}#status{min-height:28px}#clock{font-variant-numeric:tabular-nums;color:#ffcc55;font-weight:700}.muted{font-size:14px;color:#9baec3}.top{display:flex;justify-content:space-between;gap:20px;align-items:baseline}#test{display:none}
+.studio{display:grid;grid-template-columns:minmax(0,2fr) minmax(300px,1fr);gap:20px;align-items:start}.studio aside{margin:0;max-height:58vh;overflow:auto}.studio canvas{width:100%;height:auto}#notes{font-size:17px;line-height:1.65}@media(max-width:1050px){.studio{grid-template-columns:1fr}.studio aside{max-height:none}}
+</style></head>
+<body><main>
+<div class="top"><h1>Record your presentation in your own voice</h1><a href="Presentation.pdf">Presentation PDF</a></div>
+<p>Review the notes, then start recording and allow microphone access. Advance at your own pace. The saved video contains the slides, animations and your voice; the notes and buttons stay outside the recording.</p>
+<nav aria-label="Presentation and recording controls"><button id="previous">Previous</button><span id="counter"></span><button id="next">Next slide</button><button class="primary" id="start">Start recording</button><button id="stop" disabled>Stop and save</button><span id="clock">00:00</span><button id="test">Test silent export</button></nav>
+<p id="status" role="status">Ready. Use Left and Right to change slides. Your microphone is off.</p>
+<div class="studio"><canvas id="video" width="1920" height="1080" aria-label="Current presentation slide"></canvas>
+<aside><h2>YOUR NARRATION NOTES · NOT RECORDED</h2><p id="notes"></p></aside>
+</div>
+<p class="muted">Aim for 7–9 minutes, leaving time for fresh execution and questions in the 15-minute live slot. Pause to explain in your own words. Your voice is recorded locally in this browser and saved to your computer.</p>
+<p class="muted">The downloaded recording is the video to review and finalize. The code ZIP and report are separate deliverables. <a href="Narration-Script.md">Full narration script</a> · <a href="../viewer/index.html">Offline v1 demo</a> · <a href="../viewer/v2.html">Offline v2 demo</a></p>
+</main><script src="slides.js"></script><script src="../viewer/data/replays.js"></script><script src="recorder.js"></script></body></html>
