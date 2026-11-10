@@ -29,7 +29,7 @@ The **Replay lab** contains saved trajectories. v2's 3D scene is a rendering of 
 
 ## Understand and check the results
 
-Start with the site's **Results** section, the [research report](report/report.pdf), and the [learning guide](docs/guide/how-it-works.md). The guide and report Markdown contain templates; the saved PDF is the rendered paper. The prose explains the environment, independent PPO, signalling objective, interventions and limitations.
+Start with the site's **Results** section, the [research report](report/report.pdf), and the [illustrated learning guide (PDF)](docs/guide/how-it-works.pdf). The guide and report Markdown contain templates; the saved PDF is the rendered paper. The prose explains the environment, independent PPO, signalling objective, interventions and limitations.
 
 Every displayed website statistic is loaded from the committed `results/*/summary.json` files. No measured outcome is hard-coded into the site. `results/*/per_run.csv` is the seed-level source table. The four groups are:
 
